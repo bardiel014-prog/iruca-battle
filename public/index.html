@@ -211,6 +211,7 @@
         pointer-events: none;
       }
       .pov-img.guard { transform: scale(1.02); }
+      .stage.pov-loading .pov-img { opacity: 0 !important; transition: none; }
       .pov-img.atk { transform: scale(1.1); }
       .stage[data-view="offense"] .pov-img.guard,
       .stage[data-view="idle"] .pov-img.guard { opacity: 1; }
@@ -250,6 +251,9 @@
         text-align: center;
       }
       .banner small { display: block; font-size: 11px; font-weight: 500; color: #d8c9a8; letter-spacing: .02em; white-space: normal; }
+      /* カウントダウン中は中央の READY 帯だけで案内する（バナー・ビュー補足の三重表示を避ける） */
+      .stage:has(.ready-pop.show) .banner,
+      .stage:has(.ready-pop.show) .view-badge small { display: none; }
 
       /* shrinking ring */
       .ring {
@@ -303,7 +307,15 @@
         font-size: clamp(32px, 8vw, 56px); font-weight: 900; letter-spacing: .06em;
         color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 6px 22px rgba(0,0,0,.5);
       }
-      .judge-pop .sub { font-size: 13px; font-weight: 700; color: #ffe9b0; text-shadow: 0 1px 5px rgba(0,0,0,.8); }
+      .judge-pop .sub { font-size: 19px; font-weight: 700; color: #ffe9b0; text-shadow: 0 1px 5px rgba(0,0,0,.8); margin-top: 2px; }
+      /* 判定文字は絵に埋もれないよう半透明の帯を敷く */
+      .judge-pop.show { background: rgba(0, 0, 0, .6); padding: 10px 22px 12px; max-width: 92%; width: max-content; }
+      @media (max-width: 600px) { .judge-pop .sub { font-size: 16px; } .judge-pop.show { padding: 8px 14px 10px; } }
+      /* 判定フラッシュ（振動非対応端末=iOS Safari でも手応えが出るように） */
+      .judge-flash { position: absolute; inset: 0; z-index: 9; pointer-events: none; opacity: 0; }
+      .judge-flash.on { animation: judgeFlash .32s ease-out; }
+      @keyframes judgeFlash { 0% { opacity: .55; } 100% { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .judge-flash.on { animation: none; } }
       .judge-pop.show { display: block; animation: popin .18s ease; }
       @keyframes popin { from { scale: .7; opacity: 0; } to { scale: 1; opacity: 1; } }
 
@@ -384,6 +396,11 @@
       .select-bar { display: block; }
       .select-bar .start-lead { margin-top: 12px; }
       .select-bar .start-btn { width: 100%; margin-top: 12px; }
+      /* キャラを選んだらすぐ押せるよう、開始ボタンは画面下に貼り付ける */
+      .select-bar .start-btn { position: sticky; bottom: 10px; z-index: 5; box-shadow: 0 -6px 18px rgba(0,0,0,.55), 4px 4px 0 var(--ink); }
+      .start-rules { margin-top: 12px; }
+      .start-rules summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: .06em; }
+      .start-rules .start-lead { margin-top: 8px; }
       .select-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
       .select-head h2 { font-size: 15px; letter-spacing: .14em; margin: 0; font-weight: 900; }
       .select-head .cpu-note { font-size: 11.5px; color: var(--ink-dim); font-weight: 700; }
@@ -405,7 +422,12 @@
       .char-card .tdesc { font-size: 11.5px; color: var(--ink-dim); line-height: 1.55; margin-top: 2px; height: calc(11.5px * 1.55 * 2); overflow: hidden; }
       .char-card .tdesc .tline { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       @media (max-width: 640px) { .char-card .tdesc { font-size: 10.5px; height: calc(10.5px * 1.55 * 2); } .char-card .meta { padding: 8px 8px 9px; } }
-      .char-card.selected { border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+      .char-card.selected { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold), 4px 4px 0 var(--ink); position: relative; }
+      .char-card.selected::after {
+        content: "✓ 選択中"; position: absolute; top: 6px; left: 6px; z-index: 2;
+        font-size: 11px; font-weight: 900; letter-spacing: .06em; color: #1a1206;
+        background: var(--gold); padding: 3px 8px; pointer-events: none;
+      }
       .char-card.selected .tname { color: var(--teal); }
       .char-card:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
       .select-detail { margin-top: 12px; font-size: 12.5px; line-height: 1.7; color: var(--ink-dim); background: var(--bg); border: 1px dashed var(--line); padding: 9px 13px; }
@@ -454,8 +476,23 @@
       .hint b { color: var(--ink); }
 
       /* ---------- log & rules ---------- */
-      .lower { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
-      @media (max-width: 640px) { .lower { grid-template-columns: 1fr; } }
+      .lower { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
+      /* 戦闘画面＋戦況ログ */
+      .battle-main { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; align-items: stretch; }
+      .battle-col { min-width: 0; }
+      .log-card { display: flex; flex-direction: column; min-height: 0; }
+      .log-card .log { max-height: none; flex: 1 1 0; min-height: 0; }
+      .log-card h2 { display: flex; justify-content: space-between; align-items: center; }
+      .log-toggle { display: none; cursor: pointer; font-family: inherit; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 3px 9px; }
+      @media (max-width: 640px) {
+        .battle-main { grid-template-columns: 1fr; gap: 0; }
+        .log-card { margin-top: 8px; padding: 8px 12px; }
+        .log-card h2 { margin-bottom: 4px; }
+        .log-card .log { flex: none; }
+        .log-toggle { display: inline-block; }
+        .log-card:not(.expanded) .log li:nth-child(n+3) { display: none; }
+        .log-card.expanded .log { max-height: 40svh; overflow-y: auto; }
+      }
       .card { background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; box-shadow: var(--shadow); }
       .card h2 { font-size: 13px; letter-spacing: .14em; margin: 0 0 8px; font-weight: 900; }
       .log { list-style: none; margin: 0; padding: 0; font-size: 12.5px; line-height: 1.65; max-height: 168px; overflow-y: auto; }
@@ -664,6 +701,10 @@
         .stage { height: 68svh; min-height: 430px; }
         .pov-img { object-position: 50% 8%; }
         .banner { top: auto; bottom: 12px; max-width: 94%; }
+        /* セラの回復ボタンが出ている間は、バナーをボタンの上へ逃がす */
+        .stage:has(.heal-btn.show) .banner { bottom: 68px; }
+        /* ビューの補足（カウントダウン後に〜）は READY 帯と重複するのでスマホでは省く */
+        .view-badge small { display: none; }
         .view-badge { font-size: 13px; padding: 6px 11px; }
       }
     </style>
@@ -709,6 +750,7 @@
           <div class="opp-head"><h3>対戦相手（CPU）</h3><span>デフォルトはランダム（残り5人から抽選）</span></div>
           <div class="cpu-grid" id="cpuGrid"></div>
         </div>
+        <details class="start-rules"><summary>遊び方（ルールの要点）</summary>
         <p class="start-lead">
           目の前の相手と向き合う<b>POV対戦</b>。各ターンは<b>READY</b>と<b>3・2・1</b>のカウントダウンから始まり、終わった瞬間に行動開始。
           あなたの番は<b>攻撃ビュー</b>――<b>残り3秒のゲージ</b>が減る間に相手の体をタッチして狙いを決める（長押し中はゲージ停止）。
@@ -716,6 +758,7 @@
           相手の番は<b>防御ビュー</b>――攻撃はいつ来るか分からない。来たら<b>縮小リング</b>が消える前に中心をタップ。
           残り<b>60%より大</b>で押せばガード（削りあり）、<b>30%より大〜60%以下</b>でジャストガード（削りなし）、<b>30%以下</b>まで待って合わせればカウンター（反撃10が自動発動）。消えてからでは遅い――<b>消滅後はガード不能</b>だ。
         </p>
+        </details>
         <button class="big-btn start-btn" id="startBtn" disabled style="opacity:.45">キャラクターを選んでください</button>
         <button class="ghost-btn" id="backMenuBtn" type="button">メニューに戻る</button>
       </div>
@@ -771,6 +814,8 @@
           <div class="tut-bar hidden" id="tutBar"></div>
         </div>
 
+      <div class="battle-main">
+      <div class="battle-col">
       <!-- POV stage -->
       <div class="stage" id="stage" data-view="idle" role="button" aria-label="対戦画面。READYが消えたら行動開始。攻撃ビューでは相手の体をタッチし、長押しでチャージ、離すと攻撃。防御ビューではリングの中心をタップ" tabindex="-1">
         <img class="pov-img guard" alt="構えてこちらを見据える対戦相手（構え）" />
@@ -787,6 +832,7 @@
 
         <div class="parry-zone" id="parryZone"></div>
         <div class="ring" id="ring"><div class="dot"></div><div class="ms" id="ringMs"></div></div>
+        <div class="judge-flash" id="judgeFlash"></div>
         <div class="judge-pop" id="judgePop"><div class="big" id="judgeBig"></div><div class="sub" id="judgeSub"></div></div>
 
         <div class="overlay hidden" id="endOverlay">
@@ -816,6 +862,14 @@
           <div class="hpbar cpu"><div class="hpfill cpu" id="hpCpuFill"></div></div>
         </div>
       </div>
+      </div><!-- /.battle-col -->
+
+      <!-- 戦況ログ：PCは戦闘画面の右、スマホは体力ゲージの直下（最新2件、タップで全件） -->
+      <aside class="card log-card" id="logCard">
+        <h2>戦況ログ <button class="log-toggle" id="logToggle" type="button" aria-expanded="false" aria-controls="log">全件</button></h2>
+        <ul class="log" id="log"></ul>
+      </aside>
+      </div><!-- /.battle-main -->
 
       <!-- attack spec & trait room -->
       <div class="panel-row">
@@ -829,7 +883,7 @@
             <div class="stat"><b>550–1100ms</b><span>リング縮小</span></div>
             <div class="stat"><b>10</b><span>カウンター反撃</span></div>
           </div>
-          <p class="atk-note">攻撃は1種類のまま、長押しのチャージ量で強さ・遅さ・円の大きさが連続的に変わる。溜めるほど強いが、円は大きく遅くなって捌きやすい。ラリーが続くほど縮小は5%ずつ速くなる（下限320ms）。</p>
+          <p class="atk-note">攻撃は1種類のまま、長押しのチャージ量で強さ・遅さ・円の大きさが連続的に変わる。溜めるほど強いが、円は大きく遅くなって捌きやすい。ラリーが続くほど縮小は5%ずつ速くなる（下限320ms。モルガナ・かんなの特性で前後する）。</p>
         </div>
         <div class="mini-card">
           <h2>キャラクター特性（対戦中）</h2>
@@ -856,15 +910,11 @@
             <li>リングの<b>今の大きさ＝許容誤差</b>。遅いタップほど中心を正確に狙う必要がある。</li>
             <li>攻撃側は<b>最大3秒</b>待てる（ディレイ）。ただし触らずに時間切れになると<b>不発</b>でターンが移る。長押ししている間はゲージが止まる。</li>
             <li><b>長押しチャージ</b>（最大1秒）でダメージ8→24、縮小550→1100ms、円も大きく育つ。溜めた分だけ捌きやすくもなる。</li>
-            <li>交換が続くほどリングは<b>5%ずつ速く</b>なる（下限320ms）。</li>
+            <li>交換が続くほどリングは<b>5%ずつ速く</b>なる（下限320ms。モルガナの攻撃は0.85倍、かんなへの攻撃は1.2倍の時間になる）。</li>
             <li>攻守が替わるたびに画面は<b>攻撃ビュー／防御ビュー</b>へ切り替わり、毎ターン<b>READY→3・2・1</b>のカウントダウンが終わってから行動開始。</li>
             <li><b>キャラクター特性</b>がHP・ダメージ・リング速度・カウンター範囲・回復をずらす。相手の特性は対戦開始時に決まる（特性パネル参照）。</li>
             <li><b>ルシアが防御側のときは例外</b>：ガード／ジャストガードは成立しない。残り50%以下のタップはすべてカウンター、50%より大きいタイミングのタップも無タップも満ダメージになる。</li>
           </ul>
-        </div>
-        <div class="card">
-          <h2>戦況ログ</h2>
-          <ul class="log" id="log"></ul>
         </div>
       </div>
       </section>
@@ -897,7 +947,7 @@
         ring: null,              // {attacker, defender, fx, fy, p, dmg, chip, dur, R0, t0, raf, cpuTapAt, cpuTapXY, done}
         hold: null,              // {fx, fy, t0} 長押しチャージ中
         aimEnd: 0, aimRaf: 0,    // 攻撃猶予ゲージの締切と描画ループ
-        bestCounterMs: null,
+        bestCounterMs: null, bestCounterF: 1,
         exchanges: 0,
         timers: []
       };
@@ -913,6 +963,12 @@
           aimGauge = $("aimGauge"), aimFill = $("aimFill"), aimLabel = $("aimLabel"),
           chargeRing = $("chargeRing"), chargeLabel = $("chargeLabel"),
           logEl = $("log");
+      $("logToggle").addEventListener("click", function () {
+        var card = $("logCard");
+        var open = card.classList.toggle("expanded");
+        this.setAttribute("aria-expanded", open ? "true" : "false");
+        this.textContent = open ? "閉じる" : "全件";
+      });
 
       /* 静的 <img> の src はレジストリ経由でのみ設定する（HTML にパスを直書きしない） */
       $("gameLogo").src = ASSETS.titleLogo;
@@ -930,11 +986,11 @@
           trait: "呪いの逆流", short: ["HP50%以下で攻撃×1.25", "HP25%以下で攻撃×1.5"],
           desc: "自分の残りHPが50%以下で攻撃ダメージ×1.25、25%以下で×1.5に上がる（段階式）。削りは据え置き。" },
         { id: "morgana", name: "モルガナ", img: ASSETS.selectMorgana, pos: "50% 50%",  hp: 100,
-          trait: "魅惑の踏み込み", short: ["自分の攻撃の防御リング", "0.85倍の速さで縮む"],
-          desc: "自分の攻撃の防御リングが通常の0.85倍の時間で縮む（速い）。相手が捌きにくい。" },
+          trait: "魅惑の踏み込み", short: ["自分の攻撃のリングは", "縮む時間0.85倍（速い）"],
+          desc: "自分の攻撃の防御リングが、通常の0.85倍の時間で縮む（約1.18倍の速さ）。相手が捌きにくい。" },
         { id: "kanna",   name: "かんな",   img: ASSETS.selectKanna,   pos: "50% 50%", hp: 100,
-          trait: "神楽の勘", short: ["自分への攻撃リングは", "1.2倍ゆっくり縮む"],
-          desc: "自分への攻撃の防御リングが通常の1.2倍ゆっくり縮む。カウンターを狙いやすい。" },
+          trait: "神楽の勘", short: ["自分への攻撃のリングは", "縮む時間1.2倍（遅い）"],
+          desc: "自分への攻撃の防御リングが、通常の1.2倍の時間をかけて縮む（ゆっくり）。カウンターを狙いやすい。" },
         { id: "lucia",   name: "ルシア",   img: ASSETS.selectLucia,   pos: "50% 50%", hp: 100,
           trait: "逆書きの反撃", short: ["ガードできない代わり", "50%以下は全部カウンター"],
           desc: "ガードできない。代わりに残り50%以下はすべてカウンター。防御側のときガード／ジャストガードは成立せず、残り50%より大きいタイミングのタップも無タップも満ダメージ。早押しは禁物――50%を切るまで待つのがルシアの戦い方。" },
@@ -996,6 +1052,7 @@
         btn.disabled = false;
         btn.style.opacity = "";
         btn.textContent = c.name + "で対戦開始";
+        buildCpuPicker();
         $("traitYouName").textContent = c.name + "「" + c.trait + "」";
         $("traitYouDesc").textContent = c.desc;
       }
@@ -1085,7 +1142,16 @@
            自分の防御ターン＝相手の攻撃、直撃時＝相手の被弾
            （切替は CSS の data-view / show-hit が担う）。 */
         var set = povSetFor(cpu.id);
+        /* src を差し替えても新しい絵が読めるまでブラウザは前の絵を出し続ける。
+           前の相手（初期値モルガナ等）が一瞬見えないよう、読み込み完了まで隠す */
+        stage.classList.add("pov-loading");
         g.src = set.guard; a.src = set.atk; h.src = set.hit;
+        var shown = false;
+        var reveal = function () { if (shown) return; shown = true; stage.classList.remove("pov-loading"); };
+        Promise.all([g, a, h].map(function (im) {
+          return im.decode ? im.decode().catch(function () {}) : Promise.resolve();
+        })).then(reveal);
+        setTimeout(reveal, 1500);
         S.povStage = stageKeyFor();
         g.style.objectPosition = ""; a.style.objectPosition = ""; h.style.objectPosition = "";
         g.alt = "構えてこちらを見据える" + cpu.name + "（対戦相手・構え）";
@@ -1151,7 +1217,9 @@
       function buildCpuPicker() {
         var grid = $("cpuGrid");
         grid.innerHTML = "";
-        var opts = [{ id: null, name: "ランダム" }].concat(CHARACTERS.map(function (c) { return { id: c.id, name: c.name }; }));
+        /* 自分のキャラは相手に選べない（ランダムの「残り5人から抽選」と表示をそろえる） */
+        if (S.cpuChoice && S.cpuChoice === S.charYou) S.cpuChoice = null;
+        var opts = [{ id: null, name: "ランダム" }].concat(CHARACTERS.filter(function (c) { return c.id !== S.charYou; }).map(function (c) { return { id: c.id, name: c.name }; }));
         opts.forEach(function (o) {
           var b = document.createElement("button");
           b.type = "button";
@@ -1520,10 +1588,31 @@
         stage.appendChild(el);
         setTimeout(function () { el.remove(); }, 520);
       }
+      /* 判定ごとの振動パターン（Vibration API 非対応端末では何もしない）。回復は振動なし */
+      var JUDGE_HAPTICS = {
+        "ガード": 15,
+        "ジャストガード": [10, 30, 10],
+        "カウンター！": [20, 40, 60],
+        "ガード不能": 80, "防御失敗…": 80, "防御を外した！": 80,
+        "不発": [30, 30, 30]
+      };
+      /* 手応えのフラッシュ色（直撃は既存の stageHurt のシェイクが担う） */
+      var JUDGE_FLASH = { "ジャストガード": "#5fe0d4", "カウンター！": "#ffd257" };
+      function haptic(pattern) {
+        try { if (pattern && navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+      }
+      function judgeFlash(color) {
+        var fl = $("judgeFlash");
+        if (!fl || !color) return;
+        fl.style.background = "radial-gradient(circle at 50% 46%, " + color + " 0%, transparent 70%)";
+        fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+      }
       function showJudge(big, sub, color) {
         judgeBig.textContent = big; judgeBig.style.color = color || "#fff";
         judgeSub.textContent = sub || "";
         judgePop.classList.add("show");
+        haptic(JUDGE_HAPTICS[big]);
+        judgeFlash(JUDGE_FLASH[big]);
         later(function () { judgePop.classList.remove("show"); }, 950);
       }
       function stageHurt() {
@@ -1692,7 +1781,8 @@
           big = "カウンター！"; color = "#ffd257";
           sub = "反撃 " + dmgAtk + "ダメージ（残り " + pct + "%／反応 " + reaction + "ms）";
           sfx.counter();   /* カウンター成功時は counter.mp3（実録の剣戟音）のみを鳴らす。合成音は重ねない。シェイクと喰らい絵は直撃と同じ */
-          if (r.defender === "you" && (S.bestCounterMs === null || reaction > S.bestCounterMs)) S.bestCounterMs = reaction;
+          /* 「際どさ」はリングの残り割合で比べる（リングの長さが違う攻撃同士でも公平に比べられる） */
+          if (r.defender === "you" && (S.bestCounterMs === null || f < S.bestCounterF)) { S.bestCounterMs = reaction; S.bestCounterF = f; }
           log(atkName + "の攻撃を" + defName + "がカウンター、反撃" + dmgAtk + "（残り" + pct + "%／" + reaction + "ms）");
         } else if (outcome === "just") {
           big = "ジャストガード"; color = "#5fe0d4";
@@ -2002,7 +2092,7 @@
           "交換数 <b>" + S.exchanges + "</b> ／ 到達ラリー <b>" + S.rally + "</b><br>" +
           "あなたの残りHP <b>" + Math.max(0, S.hpYou) + "</b> ／ 相手 <b>" + Math.max(0, S.hpCpu) + "</b><br>" +
           (S.bestCounterMs !== null
-            ? "最も際どいカウンターは反応 <b>" + S.bestCounterMs + "ms</b> 時点の一撃"
+            ? "最も際どいカウンター：リング残り <b>" + Math.round(S.bestCounterF * 100) + "%</b><span style=\"white-space:nowrap\">（反応 " + S.bestCounterMs + "ms）</span>"
             : "今回はカウンターなし ― 次は残り30%以下まで待ってみよう") + unlockNote;
         $("endOverlay").classList.remove("hidden");
         log("試合終了：" + (draw ? "相打ち" : win ? "あなたの勝利" : "相手の勝利"));
@@ -2014,7 +2104,7 @@
         if (S.ring) { cancelAnimationFrame(S.ring.raf); S.ring.done = true; }
         S.hpYou = S.maxYou; S.hpCpu = S.maxCpu; S.rally = 0; S.exchanges = 0;
         S.seraDeepest = "";      /* セラの最深段階ラッチは試合ごとにリセット */
-        S.turn = "you"; S.bestCounterMs = null; lastCpuPoint = null; S.hold = null;
+        S.turn = "you"; S.bestCounterMs = null; S.bestCounterF = 1; lastCpuPoint = null; S.hold = null;
         stage.classList.remove("ko", "hurt", "show-hit");
         hideRing(); judgePop.classList.remove("show");
         endAimUi(); readyPop.classList.remove("show");
@@ -2294,7 +2384,7 @@
         S.maxYou = st.maxHp[F.seat]; S.maxCpu = st.maxHp[1 - F.seat];
         S.hpYou = st.hp[F.seat]; S.hpCpu = st.hp[1 - F.seat];
         S.rally = st.rally; S.exchanges = st.turn;
-        S.bestCounterMs = null; S.hold = null;
+        S.bestCounterMs = null; S.bestCounterF = 1; S.hold = null;
         S.seraDeepest = "";      /* セラの最深段階ラッチは試合ごと（再戦含む）にリセット */
         S.povStage = null;       /* 段階を再評価させる（refreshScore 経由で syncStageImages が走る） */
         statReset();   /* 成功率ログ：新しい試合の集計を始める */
