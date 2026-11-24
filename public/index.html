@@ -1,0 +1,2631 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>紅月闘技会</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <script>
+      /* ============ 素材レジストリ（各素材パスはソース全体でここにちょうど1回だけ定義する） ============
+         表示用 img・先読み（preload / Image() / decode）・チュートリアル・フレンド対戦など、
+         全ての利用箇所はこのレジストリ経由で URL を取得する。HTML や CSS にパスを直書きしない。 */
+      var ASSETS = {
+        ready: "assets/ready.webp",
+        count3: "assets/count-3.webp",
+        count2: "assets/count-2.webp",
+        count1: "assets/count-1.webp",
+        titleLogo: "assets/title-logo.webp",
+        povGuard: {
+          vera: "assets/pov-guard-vera.webp",
+          hex: "assets/pov-guard-hex.webp",
+          morgana: "assets/pov-guard-morgana.webp",
+          kanna: "assets/pov-guard-kanna.webp",
+          lucia: "assets/pov-guard-lucia.webp",
+          sera: "assets/pov-guard-sera.webp"
+        },
+        povAttack: {
+          vera: "assets/pov-attack-vera.webp",
+          hex: "assets/pov-attack-hex.webp",
+          morgana: "assets/pov-attack-morgana.webp",
+          kanna: "assets/pov-attack-kanna.webp",
+          lucia: "assets/pov-attack-lucia.webp",
+          sera: "assets/pov-attack-sera.webp"
+        },
+        povHit: {
+          vera: "assets/pov-hit-vera.webp",
+          hex: "assets/pov-hit-hex.webp",
+          morgana: "assets/pov-hit-morgana.webp",
+          kanna: "assets/pov-hit-kanna.webp",
+          lucia: "assets/pov-hit-lucia.webp",
+          sera: "assets/pov-hit-sera.webp"
+        },
+        /* ライフ50（ボロボロ段階）セット：相手の残りHPが絶対値50以下26以上で全キャラ共通に切り替わる */
+        povGuardLife50: {
+          vera: "assets/pov-guard-vera-life50.webp",
+          hex: "assets/pov-guard-hex-life50.webp",
+          morgana: "assets/pov-guard-morgana-life50.webp",
+          kanna: "assets/pov-guard-kanna-life50.webp",
+          lucia: "assets/pov-guard-lucia-life50.webp",
+          sera: "assets/pov-guard-sera-life50.webp"
+        },
+        povAttackLife50: {
+          vera: "assets/pov-attack-vera-life50.webp",
+          hex: "assets/pov-attack-hex-life50.webp",
+          morgana: "assets/pov-attack-morgana-life50.webp",
+          kanna: "assets/pov-attack-kanna-life50.webp",
+          lucia: "assets/pov-attack-lucia-life50.webp",
+          sera: "assets/pov-attack-sera-life50.webp"
+        },
+        povHitLife50: {
+          vera: "assets/pov-hit-vera-life50.webp",
+          hex: "assets/pov-hit-hex-life50.webp",
+          morgana: "assets/pov-hit-morgana-life50.webp",
+          kanna: "assets/pov-hit-kanna-life50.webp",
+          lucia: "assets/pov-hit-lucia-life50.webp",
+          sera: "assets/pov-hit-sera-life50.webp"
+        },
+        /* ライフ25（脱衣段階）セット：相手の残りHPが絶対値25以下で全キャラ共通に切り替わる */
+        povGuardLife25: {
+          vera: "assets/pov-guard-vera-life25.webp",
+          hex: "assets/pov-guard-hex-life25.webp",
+          morgana: "assets/pov-guard-morgana-life25.webp",
+          kanna: "assets/pov-guard-kanna-life25.webp",
+          lucia: "assets/pov-guard-lucia-life25.webp",
+          sera: "assets/pov-guard-sera-life25.webp"
+        },
+        povAttackLife25: {
+          vera: "assets/pov-attack-vera-life25.webp",
+          hex: "assets/pov-attack-hex-life25.webp",
+          morgana: "assets/pov-attack-morgana-life25.webp",
+          kanna: "assets/pov-attack-kanna-life25.webp",
+          lucia: "assets/pov-attack-lucia-life25.webp",
+          sera: "assets/pov-attack-sera-life25.webp"
+        },
+        povHitLife25: {
+          vera: "assets/pov-hit-vera-life25.webp",
+          hex: "assets/pov-hit-hex-life25.webp",
+          morgana: "assets/pov-hit-morgana-life25.webp",
+          kanna: "assets/pov-hit-kanna-life25.webp",
+          lucia: "assets/pov-hit-lucia-life25.webp",
+          sera: "assets/pov-hit-sera-life25.webp"
+        },
+        selectVera: "assets/select-vera.webp",
+        selectHex: "assets/select-hex.webp",
+        selectMorgana: "assets/select-morgana.webp",
+        selectKanna: "assets/select-kanna.webp",
+        selectLucia: "assets/select-lucia.webp",
+        selectSera: "assets/select-sera.webp",
+        galleryVera: "assets/gallery-vera.webp",
+        galleryHex: "assets/gallery-hex.webp",
+        galleryMorgana: "assets/gallery-morgana.webp",
+        galleryKanna: "assets/gallery-kanna.webp",
+        galleryLucia: "assets/gallery-lucia.webp",
+        gallerySera: "assets/gallery-sera.webp",
+        galleryVeraThumb: "assets/gallery-vera-thumb.webp",
+        galleryHexThumb: "assets/gallery-hex-thumb.webp",
+        galleryMorganaThumb: "assets/gallery-morgana-thumb.webp",
+        galleryKannaThumb: "assets/gallery-kanna-thumb.webp",
+        galleryLuciaThumb: "assets/gallery-lucia-thumb.webp",
+        gallerySeraThumb: "assets/gallery-sera-thumb.webp",
+        slash: "assets/slash.mp3",
+        counter: "assets/counter.mp3"
+      };
+      /* 先読み：従来の静的 <link rel="preload"> と同じ対象を、レジストリ経由で動的に発行する */
+      (function () {
+        [ASSETS.ready, ASSETS.count3, ASSETS.count2, ASSETS.count1].forEach(function (u) {
+          var l = document.createElement("link");
+          l.rel = "preload"; l.as = "image"; l.href = u;
+          document.head.appendChild(l);
+        });
+        [ASSETS.slash, ASSETS.counter].forEach(function (u) {
+          var l = document.createElement("link");
+          l.rel = "preload"; l.as = "audio"; l.type = "audio/mpeg"; l.href = u;
+          document.head.appendChild(l);
+        });
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0b0d;          /* サイト全体の地色は黒系で統一（タイトルロゴの黒背景と一体に） */
+        --panel: #17171b;
+        --ink: #f3ead9;
+        --ink-dim: #a79e8f;
+        --line: #35353c;
+        --accent: #d93a1e;      /* vermillion = 攻撃 */
+        --accent-ink: #ffffff;
+        --gold: #e9a820;
+        --teal: #0e7d74;        /* 防御 */
+        --you: #0e7d74;
+        --cpu: #c22f4e;
+        --hp-bg: #26262c;
+        --shadow: 0 10px 30px rgba(0, 0, 0, .45);
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Noto Sans JP", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .wrap { max-width: 1040px; margin: 0 auto; padding: 14px 14px 28px; }
+
+      /* ---------- scoreboard（体力ゲージ：画面下） ---------- */
+      .scoreboard {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 10px;
+        align-items: end;
+        margin-top: 12px;
+        background: var(--panel);
+        border: 2px solid var(--ink);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 12px 14px 13px;
+      }
+      .fighter-tag { font-weight: 900; font-size: 15px; letter-spacing: .06em; display: flex; align-items: baseline; gap: 8px; }
+      .fighter-tag .who { font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: .12em; }
+      .tag-you { color: var(--you); }
+      .tag-cpu { color: var(--cpu); justify-content: flex-end; text-align: right; }
+      .hpnum { font-family: "Bebas Neue", sans-serif; font-size: 26px; color: var(--ink); }
+      .hpbar {
+        height: 14px; background: var(--hp-bg); border: 2px solid var(--ink);
+        margin-top: 4px; overflow: hidden;
+      }
+      .hpbar.cpu { transform: scaleX(-1); }
+      .hpfill { height: 100%; width: 100%; transition: width .45s cubic-bezier(.2,.8,.3,1); }
+      .hpfill.you { background: var(--you); }
+      .hpfill.cpu { background: var(--cpu); }
+      .hpfill.low { background: var(--accent); }
+      .center-info { text-align: center; padding-bottom: 2px; }
+      .rally-label { font-size: 11px; font-weight: 700; color: var(--ink-dim); letter-spacing: .14em; }
+      .rally-num { font-family: "Bebas Neue", sans-serif; font-size: 30px; line-height: 1; }
+      .speed-line { font-size: 11px; color: var(--ink-dim); font-weight: 500; white-space: nowrap; }
+      .speed-line b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+      /* ---------- POV stage ---------- */
+      .stage {
+        position: relative;
+        height: min(74vh, 700px);
+        min-height: 460px;
+        background: #171310;
+        border: 2px solid var(--ink);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .stage::after { /* vignette */
+        content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+        background: radial-gradient(115% 100% at 50% 42%, transparent 55%, rgba(10, 6, 3, .5) 100%);
+      }
+      .pov-img {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; object-position: 50% 10%;
+        opacity: 0; transition: opacity .28s ease, transform .28s ease, filter .4s ease;
+        pointer-events: none;
+      }
+      .pov-img.guard { transform: scale(1.02); }
+      .pov-img.atk { transform: scale(1.1); }
+      .stage[data-view="offense"] .pov-img.guard,
+      .stage[data-view="idle"] .pov-img.guard { opacity: 1; }
+      .stage[data-view="defense"] .pov-img.atk { opacity: 1; }
+      .pov-img.hit { transform: scale(1.05); }
+      .stage.show-hit .pov-img.hit { opacity: 1; }
+      .stage.ko .pov-img { filter: saturate(.35) brightness(.55); }
+      .stage.aiming { cursor: crosshair; box-shadow: var(--shadow), inset 0 0 0 3px rgba(233, 168, 32, .55); }
+      .stage.defending { box-shadow: var(--shadow), inset 0 0 0 3px rgba(217, 58, 30, .6); }
+      @keyframes stageShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 45%{transform:translateX(5px)} 70%{transform:translateX(-3px)} }
+      .stage.hurt { animation: stageShake .38s ease; }
+      @media (prefers-reduced-motion: reduce) {
+        .stage.hurt { animation: none; }
+        .pov-img { transition: opacity .01s, filter .4s ease; }
+      }
+
+      /* view badge */
+      .view-badge {
+        position: absolute; top: 12px; left: 12px; z-index: 6;
+        font-weight: 900; font-size: 15px; letter-spacing: .1em;
+        color: #fff; padding: 7px 14px; pointer-events: none;
+        border: 1px solid rgba(255,255,255,.5);
+        background: rgba(16, 12, 8, .72);
+      }
+      .view-badge small { display: block; font-size: 10.5px; font-weight: 500; letter-spacing: .04em; color: #e8dcc2; margin-top: 1px; }
+      .stage[data-view="offense"] .view-badge { background: rgba(148, 38, 14, .88); }
+      .stage[data-view="defense"] .view-badge { background: rgba(7, 82, 76, .88); }
+
+      /* banner */
+      .banner {
+        position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+        z-index: 6; pointer-events: none;
+        background: rgba(16, 12, 8, .82); color: #f7efdd;
+        font-weight: 900; font-size: clamp(14px, 3vw, 19px); letter-spacing: .04em;
+        padding: 8px 18px; border: 1px solid rgba(233,168,32,.6);
+        white-space: nowrap; max-width: 62%; overflow: hidden; text-overflow: ellipsis;
+        text-align: center;
+      }
+      .banner small { display: block; font-size: 11px; font-weight: 500; color: #d8c9a8; letter-spacing: .02em; white-space: normal; }
+
+      /* shrinking ring */
+      .ring {
+        position: absolute; z-index: 8; pointer-events: none;
+        border: 4px solid #fff; border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 2px rgba(0,0,0,.35), 0 0 18px rgba(255,255,255,.25) inset;
+        display: none;
+      }
+      .ring .dot {
+        position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+        transform: translate(-50%, -50%); border-radius: 50%; background: #fff;
+        box-shadow: 0 0 0 2px rgba(0,0,0,.4);
+      }
+      .ring .ms {
+        position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%);
+        font-family: "Bebas Neue", sans-serif; font-size: 17px; color: #fff;
+        text-shadow: 0 1px 4px rgba(0,0,0,.8); letter-spacing: .08em; white-space: nowrap;
+      }
+      .ring.zone-block { border-color: #f3ead9; }
+      .ring.zone-block .dot { background: #f3ead9; }
+      .ring.zone-just { border-color: #39c2b8; box-shadow: 0 0 0 2px rgba(0,0,0,.35), 0 0 22px rgba(57,194,184,.55); }
+      .ring.zone-just .dot { background: #39c2b8; }
+      .ring.zone-parry { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(0,0,0,.35), 0 0 30px rgba(233,168,32,.85); }
+      .ring.zone-parry .dot { background: var(--gold); }
+      .parry-zone {
+        position: absolute; z-index: 7; pointer-events: none; display: none;
+        border: 2px dashed rgba(233,168,32,.85); border-radius: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .tapmark {
+        position: absolute; z-index: 9; width: 26px; height: 26px; pointer-events: none;
+        transform: translate(-50%, -50%); border-radius: 50%;
+        border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(0,0,0,.4);
+        animation: tapfade .5s ease forwards;
+      }
+      @keyframes tapfade { from { opacity: 1; scale: .6; } to { opacity: 0; scale: 1.5; } }
+      .floater {
+        position: absolute; z-index: 10; pointer-events: none;
+        font-family: "Bebas Neue", sans-serif; letter-spacing: .05em;
+        transform: translate(-50%, -50%);
+        animation: floatup 1s ease-out forwards;
+        text-shadow: 0 2px 6px rgba(0,0,0,.65); white-space: nowrap;
+      }
+      @keyframes floatup { 0% { opacity: 0; margin-top: 6px; } 15% { opacity: 1; } 100% { opacity: 0; margin-top: -44px; } }
+      .judge-pop {
+        position: absolute; z-index: 11; left: 50%; top: 46%; transform: translate(-50%, -50%);
+        pointer-events: none; text-align: center; display: none;
+      }
+      .judge-pop .big {
+        font-size: clamp(32px, 8vw, 56px); font-weight: 900; letter-spacing: .06em;
+        color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 6px 22px rgba(0,0,0,.5);
+      }
+      .judge-pop .sub { font-size: 13px; font-weight: 700; color: #ffe9b0; text-shadow: 0 1px 5px rgba(0,0,0,.8); }
+      .judge-pop.show { display: block; animation: popin .18s ease; }
+      @keyframes popin { from { scale: .7; opacity: 0; } to { scale: 1; opacity: 1; } }
+
+      /* ---------- aim gauge (攻撃までの残り3秒) ---------- */
+      .aim-gauge { position: absolute; top: 0; left: 0; right: 0; z-index: 7; display: none; }
+      .aim-gauge.show { display: block; }
+      .aim-track { height: 12px; background: rgba(10, 6, 3, .55); }
+      .aim-fill { height: 100%; width: 100%; background: var(--gold); }
+      .aim-fill.low { background: var(--accent); }
+      .aim-label {
+        position: absolute; top: 17px; right: 12px;
+        font-size: 12px; font-weight: 900; letter-spacing: .06em; color: #fff;
+        background: rgba(16, 12, 8, .75); padding: 4px 10px;
+        border: 1px solid rgba(255, 255, 255, .4);
+        font-variant-numeric: tabular-nums; white-space: nowrap;
+      }
+
+      /* ---------- charge ring (長押しで育つ円) ---------- */
+      .charge-ring {
+        position: absolute; z-index: 8; pointer-events: none; display: none;
+        border: 4px solid var(--gold); border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 2px rgba(0,0,0,.35), 0 0 26px rgba(233,168,32,.55);
+      }
+      .charge-ring .dot {
+        position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+        transform: translate(-50%, -50%); border-radius: 50%; background: var(--gold);
+        box-shadow: 0 0 0 2px rgba(0,0,0,.4);
+      }
+      .charge-label {
+        position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%);
+        font-family: "Bebas Neue", sans-serif; font-size: 16px; color: #ffd257;
+        text-shadow: 0 1px 4px rgba(0,0,0,.85); letter-spacing: .06em; white-space: nowrap;
+      }
+
+      /* ---------- READY pop ---------- */
+      .ready-pop {
+        position: absolute; inset: 0; z-index: 15; display: none;
+        align-items: center; justify-content: center; flex-direction: column;
+        pointer-events: none; background: rgba(10, 6, 3, .38);
+      }
+      .ready-pop.show { display: flex; }
+      .ready-img-wrap {
+        position: absolute; inset: 0; display: none;
+        align-items: center; justify-content: center;
+        padding-bottom: 52px; pointer-events: none;
+      }
+      .ready-img-wrap.show { display: flex; }
+      .ready-img {
+        display: block; height: auto; pointer-events: none;
+        /* 本物の透過PNGを使うため screen 合成は廃止（実機で合成反映が遅れて黒い箱が見える問題の対策） */
+        filter: drop-shadow(0 6px 22px rgba(0, 0, 0, .55));
+      }
+      .ready-img.word { width: min(620px, 88%); }
+      .ready-img.num { width: min(280px, 56vw); }
+      .ready-img.pop { animation: readyIn .18s ease; }
+      @keyframes readyIn { from { scale: .72; opacity: 0; } to { scale: 1; opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .ready-img.pop { animation: none; } }
+      .ready-sub {
+        margin-top: 12px; font-weight: 900; font-size: 14px; letter-spacing: .05em;
+        color: #fff; padding: 7px 16px; background: rgba(16, 12, 8, .85); text-align: center;
+      }
+      .ready-pop.atk .ready-sub { background: rgba(148, 38, 14, .94); }
+      .ready-pop.def .ready-sub { background: rgba(7, 82, 76, .94); }
+
+      /* ---------- start bar ---------- */
+      .start-bar {
+        margin-top: 12px; background: var(--panel); border: 2px solid var(--ink);
+        box-shadow: 4px 4px 0 var(--ink); padding: 14px 16px;
+        display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+      }
+      .start-bar.hidden { display: none; }
+      .start-lead { flex: 1 1 300px; font-size: 13px; line-height: 1.8; color: var(--ink-dim); margin: 0; }
+      .start-lead b { color: var(--ink); }
+      .start-btn { flex: 0 1 220px; width: auto; }
+
+      /* ---------- character select ---------- */
+      .select-bar { display: block; }
+      .select-bar .start-lead { margin-top: 12px; }
+      .select-bar .start-btn { width: 100%; margin-top: 12px; }
+      .select-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+      .select-head h2 { font-size: 15px; letter-spacing: .14em; margin: 0; font-weight: 900; }
+      .select-head .cpu-note { font-size: 11.5px; color: var(--ink-dim); font-weight: 700; }
+      .char-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      @media (max-width: 640px) { .char-grid { grid-template-columns: repeat(2, 1fr); } }
+      .char-card {
+        cursor: pointer; font-family: inherit; text-align: left; padding: 0;
+        background: var(--panel); color: var(--ink);
+        border: 2px solid var(--line); overflow: hidden; display: block; width: 100%;
+      }
+      .char-card .thumb { aspect-ratio: 3 / 4; overflow: hidden; background: #171310; }
+      .char-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+      .char-card:hover img { transform: scale(1.04); }
+      @media (prefers-reduced-motion: reduce) { .char-card img { transition: none; } .char-card:hover img { transform: none; } }
+      .char-card .meta { padding: 8px 10px 10px; }
+      .char-card .cname { font-weight: 900; font-size: 16px; letter-spacing: .06em; display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+      .char-card .cname .hp { font-family: "Bebas Neue", sans-serif; font-size: 13px; color: var(--ink-dim); letter-spacing: .08em; white-space: nowrap; }
+      .char-card .tname { font-size: 12px; font-weight: 900; color: var(--accent); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .char-card .tdesc { font-size: 11.5px; color: var(--ink-dim); line-height: 1.55; margin-top: 2px; height: calc(11.5px * 1.55 * 2); overflow: hidden; }
+      .char-card .tdesc .tline { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      @media (max-width: 640px) { .char-card .tdesc { font-size: 10.5px; height: calc(10.5px * 1.55 * 2); } .char-card .meta { padding: 8px 8px 9px; } }
+      .char-card.selected { border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+      .char-card.selected .tname { color: var(--teal); }
+      .char-card:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+      .select-detail { margin-top: 12px; font-size: 12.5px; line-height: 1.7; color: var(--ink-dim); background: var(--bg); border: 1px dashed var(--line); padding: 9px 13px; }
+      .select-detail b { color: var(--ink); }
+      .heal-btn {
+        position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+        z-index: 12; cursor: pointer; font-family: inherit; font-weight: 900; font-size: 14px; letter-spacing: .06em;
+        background: #1d7a3a; color: #fff; border: 2px solid #fff; padding: 10px 20px;
+        box-shadow: 0 4px 14px rgba(0,0,0,.5); display: none; white-space: nowrap;
+      }
+      .heal-btn.show { display: block; }
+      .ghost-btn {
+        cursor: pointer; font-family: inherit; font-weight: 700; font-size: 14px; letter-spacing: .06em;
+        background: transparent; color: var(--ink); border: 2px solid var(--ink);
+        padding: 10px 20px; width: 100%; margin-top: 10px;
+      }
+      .trait-line { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+      .trait-line:last-of-type { border-bottom: none; }
+      .trait-side { flex: 0 0 auto; font-size: 11px; font-weight: 900; letter-spacing: .08em; padding: 3px 8px; height: fit-content; color: #fff; }
+      .trait-side.you { background: var(--you); }
+      .trait-side.cpu { background: var(--cpu); }
+      .trait-desc { font-size: 12px; color: var(--ink-dim); line-height: 1.6; }
+
+      /* ---------- attack & trait panel ---------- */
+      .panel-row { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      @media (max-width: 640px) { .panel-row { grid-template-columns: 1fr; } }
+      .mini-card { background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; box-shadow: var(--shadow); }
+      .mini-card h2 { font-size: 13px; letter-spacing: .14em; margin: 0 0 8px; font-weight: 900; }
+      .atk-stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
+      .atk-stats .stat b { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: .05em; display: block; line-height: 1.1; }
+      .atk-stats .stat span { color: var(--ink-dim); font-size: 11.5px; }
+      .atk-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.7; margin: 8px 0 0; }
+      .trait-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+      .trait-char { font-weight: 900; font-size: 14px; }
+      .trait-char span { color: var(--cpu); }
+      .trait-slots { display: flex; gap: 8px; margin-top: 4px; }
+      .trait-slot {
+        flex: 1; border: 2px dashed var(--line); color: var(--ink-dim);
+        padding: 9px 10px; font-size: 12px; text-align: center; line-height: 1.5;
+      }
+      .trait-slot b { display: block; font-size: 12.5px; color: var(--ink); letter-spacing: .08em; }
+      .hint {
+        margin-top: 10px; font-size: 13px; color: var(--ink-dim); line-height: 1.7;
+        background: var(--panel); border: 1px solid var(--line); padding: 9px 13px;
+      }
+      .hint b { color: var(--ink); }
+
+      /* ---------- log & rules ---------- */
+      .lower { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+      @media (max-width: 640px) { .lower { grid-template-columns: 1fr; } }
+      .card { background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; box-shadow: var(--shadow); }
+      .card h2 { font-size: 13px; letter-spacing: .14em; margin: 0 0 8px; font-weight: 900; }
+      .log { list-style: none; margin: 0; padding: 0; font-size: 12.5px; line-height: 1.65; max-height: 168px; overflow-y: auto; }
+      .log li { border-bottom: 1px dashed var(--line); padding: 3px 0; }
+      .log li:last-child { border-bottom: none; }
+      .log .t { color: var(--ink-dim); font-variant-numeric: tabular-nums; margin-right: 6px; }
+      .rules { font-size: 12.5px; line-height: 1.75; margin: 0; padding-left: 1.1em; }
+      .rules b.gold { color: var(--gold); }
+      .judge-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+      .judge-table th, .judge-table td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+      .judge-table th { color: var(--ink-dim); font-weight: 700; }
+
+      /* ---------- overlay ---------- */
+      .overlay {
+        position: absolute; inset: 0; z-index: 20;
+        background: rgba(14, 10, 6, .78);
+        display: flex; align-items: center; justify-content: center; padding: 18px;
+      }
+      .overlay.hidden { display: none; }
+      .overlay-card {
+        background: var(--panel); color: var(--ink); border: 2px solid var(--ink);
+        box-shadow: 6px 6px 0 rgba(0,0,0,.5); max-width: 430px; width: 100%;
+        padding: 22px 22px 18px; text-align: center;
+      }
+      .big-btn {
+        cursor: pointer; font-family: inherit; font-weight: 900; font-size: 17px; letter-spacing: .08em;
+        background: var(--accent); color: #fff; border: 2px solid var(--ink);
+        padding: 12px 26px; box-shadow: 3px 3px 0 var(--ink); width: 100%;
+      }
+      .big-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+      .result-title { font-size: 40px; font-weight: 900; letter-spacing: .1em; margin: 2px 0; }
+      .result-title.win { color: var(--teal); }
+      .result-title.lose { color: var(--accent); }
+      .result-stats { font-size: 13px; color: var(--ink-dim); line-height: 1.9; margin: 8px 0 14px; }
+      .result-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+      /* ---------- friend battle ---------- */
+      .friend-status { font-size: 13px; line-height: 1.8; color: var(--ink-dim); margin: 0 0 12px; }
+      .friend-status b { color: var(--ink); }
+      .friend-home.hidden, .friend-room.hidden, .friend-lobby.hidden, .friend-invite.hidden { display: none; }
+      .invite-label { font-size: 12px; font-weight: 900; letter-spacing: .22em; color: var(--ink-dim); margin-top: 4px; }
+      .invite-input {
+        width: 100%; box-sizing: border-box; font-family: inherit; font-size: 13px;
+        background: var(--bg); color: var(--ink); border: 1px dashed var(--line); padding: 10px 12px; margin-top: 8px;
+      }
+      .invite-input:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
+      .friend-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.7; margin: 10px 0 0; }
+      .friend-lobby { margin-top: 16px; }
+      .char-card:disabled { cursor: default; }
+      .char-card:disabled:hover img { transform: none; }
+
+      /* ---------- coin toss（先攻・後攻抽選） ---------- */
+      .coin-bar { display: block; text-align: center; }
+      .coin-stage { perspective: 720px; height: 196px; display: flex; align-items: center; justify-content: center; }
+      .coin { position: relative; width: 142px; height: 142px; transform-style: preserve-3d; }
+      .coin-face {
+        position: absolute; inset: 0; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        box-shadow: inset 0 0 0 5px rgba(0, 0, 0, .14), inset 0 0 26px rgba(0, 0, 0, .28);
+      }
+      .coin-face svg { width: 62%; height: 62%; display: block; }
+      .coin-front {
+        background: radial-gradient(circle at 35% 30%, #ffeda6, #e9a820 55%, #96700f);
+        border: 4px solid #7d5f10; color: #54400a;
+      }
+      .coin-back {
+        background: radial-gradient(circle at 35% 30%, #ffffff, #ccd1d8 55%, #878f9a);
+        border: 4px solid #666e78; color: #454c55;
+        transform: rotateX(180deg);
+      }
+      .coin.show-front { transform: rotateX(0deg); }
+      .coin.show-back { transform: rotateX(180deg); }
+      .coin.toss-front { animation: coinTossFront 1.1s cubic-bezier(.32, .68, .42, 1) forwards; }
+      .coin.toss-back { animation: coinTossBack 1.1s cubic-bezier(.32, .68, .42, 1) forwards; }
+      @keyframes coinTossFront {
+        0% { transform: translateY(0) rotateX(0deg); }
+        30% { transform: translateY(-72px) rotateX(620deg); }
+        55% { transform: translateY(5px) rotateX(1150deg); }
+        78% { transform: translateY(-26px) rotateX(1560deg); }
+        100% { transform: translateY(0) rotateX(1800deg); }
+      }
+      @keyframes coinTossBack {
+        0% { transform: translateY(0) rotateX(0deg); }
+        30% { transform: translateY(-72px) rotateX(700deg); }
+        55% { transform: translateY(5px) rotateX(1240deg); }
+        78% { transform: translateY(-26px) rotateX(1710deg); }
+        100% { transform: translateY(0) rotateX(1980deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .coin.toss-front, .coin.toss-back { animation: none; }
+      }
+      .coin-result { font-size: clamp(26px, 6vw, 40px); font-weight: 900; letter-spacing: .08em; min-height: 1.35em; line-height: 1.35; }
+      .coin-status { font-size: 13px; line-height: 1.8; color: var(--ink-dim); margin: 6px 0 14px; min-height: 1.8em; }
+      .coin-ready { max-width: 320px; margin: 0 auto; }
+
+      /* ---------- screens ---------- */
+      .screen.hidden { display: none; }
+
+      /* ---------- title / menu ---------- */
+      .title-block { text-align: center; padding: 30px 10px 4px; }
+      .game-title { margin: 0; }
+      .game-logo { display: block; width: min(720px, 100%); height: auto; margin: 0 auto; }
+      .game-title-en { font-family: "Bebas Neue", sans-serif; letter-spacing: .34em; font-size: 13px; color: var(--ink-dim); margin-top: 6px; }
+      .title-lead { font-size: 13px; color: var(--ink-dim); line-height: 1.8; max-width: 520px; margin: 12px auto 0; }
+      .menu-list { max-width: 520px; margin: 22px auto 0; display: flex; flex-direction: column; gap: 12px; }
+      .menu-btn {
+        cursor: pointer; font-family: inherit; text-align: left; width: 100%;
+        background: var(--panel); color: var(--ink);
+        border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+        padding: 14px 18px; font-weight: 900; font-size: 18px; letter-spacing: .06em;
+      }
+      .menu-btn small { display: block; font-size: 12px; font-weight: 500; color: var(--ink-dim); letter-spacing: .02em; margin-top: 3px; }
+      .menu-btn.primary { background: var(--accent); color: #fff; }
+      .menu-btn.primary small { color: #ffe1d6; }
+      .menu-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+      .menu-btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+      .menu-btn:disabled:active { transform: none; }
+      .soon-tag { float: right; font-size: 11px; font-weight: 900; border: 2px solid currentColor; padding: 2px 8px; letter-spacing: .1em; }
+      .sister-link { text-align: center; margin-top: 2px; font-size: 13px; letter-spacing: .04em; }
+      .sister-link a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line); padding: 6px 8px; display: inline-block; }
+      .sister-link a:hover, .sister-link a:focus-visible { color: var(--ink); text-decoration-color: var(--gold); }
+      .sister-link a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+      /* ---------- stats opt-out toggle（メニュー最下部） ---------- */
+      .stats-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+      .stats-toggle-btn {
+        cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: .04em;
+        background: transparent; color: var(--ink-dim); border: 1.5px solid var(--line); padding: 6px 12px;
+      }
+      .stats-toggle-btn[aria-pressed="true"] { color: var(--ink); border-color: var(--ink-dim); }
+      .stats-toggle-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+      .stats-note { font-size: 11px; color: var(--ink-dim); }
+
+      /* ---------- gallery ---------- */
+      .sub-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+      .sub-head h2 { font-size: 17px; letter-spacing: .12em; margin: 0; font-weight: 900; }
+      .back-btn { cursor: pointer; font-family: inherit; font-weight: 700; font-size: 13px; background: transparent; color: var(--ink); border: 2px solid var(--ink); padding: 8px 14px; }
+      .gal-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.7; margin: 4px 0 12px; }
+      .gal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      @media (max-width: 640px) { .gal-grid { grid-template-columns: repeat(2, 1fr); } }
+      .gal-card { background: var(--panel); border: 2px solid var(--line); overflow: hidden; }
+      .gal-card .thumb { aspect-ratio: 2 / 3; overflow: hidden; background: #171310; position: relative; }
+      .gal-card .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+      .gal-card.locked .thumb { background: var(--hp-bg); }
+      .gal-card.locked .thumb img { filter: brightness(0); opacity: .5; }
+      .gal-q { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 64px; font-weight: 900; color: var(--ink); opacity: .65; }
+      .gal-card .meta { padding: 8px 10px 10px; }
+      .gal-card .cname { font-weight: 900; font-size: 16px; letter-spacing: .06em; }
+      .gal-status { font-size: 11.5px; color: var(--ink-dim); margin-top: 2px; line-height: 1.5; }
+      .gal-ms { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 7px; }
+      .gal-chip { font-size: 10.5px; font-weight: 700; border: 1.5px solid var(--line); color: var(--ink-dim); padding: 2px 7px; }
+      .gal-chip.done { border-color: var(--gold); color: var(--ink); background: rgba(233, 168, 32, .16); }
+      .gal-card.openable { cursor: pointer; }
+      .gal-card.openable:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+      /* ---------- gallery full-screen viewer ---------- */
+      .gal-viewer {
+        position: fixed; inset: 0; z-index: 60; display: none;
+        background: rgba(4, 4, 6, .97);
+      }
+      .gal-viewer.open { display: flex; align-items: center; justify-content: center; }
+      .gal-viewer img {
+        width: 100%; height: 100%; max-width: 100%; max-height: 100%;
+        object-fit: contain; display: block;
+      }
+      .gal-viewer .viewer-close {
+        position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 12px; z-index: 2;
+        cursor: pointer; font-family: inherit; font-weight: 900; font-size: 14px; letter-spacing: .06em;
+        background: rgba(16, 12, 8, .85); color: #fff; border: 2px solid rgba(255,255,255,.7);
+        padding: 9px 16px;
+      }
+      .gal-viewer .viewer-cap {
+        position: absolute; left: 0; right: 0; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 2;
+        text-align: center; font-size: 12.5px; font-weight: 700; color: #d8c9a8;
+        pointer-events: none; letter-spacing: .06em;
+      }
+
+      /* ---------- opponent picker ---------- */
+      .opp-wrap { margin-top: 14px; }
+      .opp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+      .opp-head h3 { font-size: 13px; letter-spacing: .12em; margin: 0; font-weight: 900; }
+      .opp-head span { font-size: 11.5px; color: var(--ink-dim); font-weight: 700; }
+      .cpu-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+      .cpu-chip { cursor: pointer; font-family: inherit; font-weight: 700; font-size: 13.5px; background: var(--bg); color: var(--ink); border: 2px solid var(--line); padding: 8px 14px; }
+      .cpu-chip.selected { border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); background: var(--panel); }
+      .cpu-chip:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+      /* ---------- battle top / tutorial bar ---------- */
+      .battle-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+      .mini-ghost { cursor: pointer; font-family: inherit; font-weight: 700; font-size: 12.5px; background: transparent; color: var(--ink); border: 2px solid var(--ink); padding: 7px 12px; }
+      .tut-bar { flex: 1 1 260px; font-size: 12.5px; font-weight: 700; line-height: 1.6; background: var(--panel); border: 2px dashed var(--gold); padding: 7px 12px; }
+      .tut-bar.hidden { display: none; }
+
+      @media (max-width: 600px) {
+        .wrap { padding: 10px 10px 22px; }
+        .scoreboard { gap: 6px; margin-top: 10px; padding: 10px 10px 11px; }
+        .fighter-tag { font-size: 12px; gap: 5px; flex-wrap: nowrap; white-space: nowrap; }
+        .fighter-tag .who { font-size: 15px; }
+        .fighter-tag .jp { display: none; }
+        .hpnum { font-size: 20px; }
+        .hpbar { height: 11px; border-width: 1.5px; }
+        .rally-num { font-size: 22px; }
+        .rally-label { font-size: 9px; }
+        .speed-line { font-size: 10px; }
+        .stage { height: 68svh; min-height: 430px; }
+        .pov-img { object-position: 50% 8%; }
+        .banner { top: auto; bottom: 12px; max-width: 94%; }
+        .view-badge { font-size: 13px; padding: 6px 11px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- タイトル／メニュー -->
+      <section class="screen" id="screenMenu">
+        <div class="title-block">
+          <h1 class="game-title"><img class="game-logo" id="gameLogo" alt="紅月闘技会" width="1800" height="613" /></h1>
+          <div class="game-title-en">REFLEX TOUCH FIGHT</div>
+          <p class="title-lead">目の前の相手と向き合うPOV対戦。攻撃は狙って長押しチャージ、防御は縮小リングが消える前に中心をタップ。残り30%以下に合わせればカウンターが炸裂する。</p>
+        </div>
+        <div class="menu-list">
+          <button class="menu-btn" id="menuTutBtn" type="button">チュートリアル<small>攻撃・防御・カウンターを3ステップで練習</small></button>
+          <button class="menu-btn primary" id="menuCpuBtn" type="button">CPU対戦<small>キャラクターを選んでCPUと対戦</small></button>
+          <button class="menu-btn" id="menuFriendBtn" type="button">フレンド対戦<small>招待リンクを送るだけで友達とオンライン対戦</small></button>
+          <button class="menu-btn" type="button" disabled><span class="soon-tag">実装予定</span>ランダム対戦<small>オンライン対戦はこの試作の範囲外</small></button>
+          <button class="menu-btn" id="menuGalBtn" type="button">ギャラリー<small id="menuGalSmall">CPU対戦で勝つと一枚絵が解放</small></button>
+          <div class="sister-link"><a href="https://iruca.tech/duel/" target="_blank" rel="noopener">姉妹作 ― 剣姫の一手</a></div>
+          <div class="stats-row">
+            <button class="stats-toggle-btn" id="statsToggleBtn" type="button" aria-pressed="true">プレイ集計：ON</button>
+            <span class="stats-note">匿名の回数集計のみ</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ギャラリー -->
+      <section class="screen hidden" id="screenGallery">
+        <div class="sub-head"><h2>ギャラリー</h2><button class="back-btn" id="galBackBtn" type="button">← メニューに戻る</button></div>
+        <p class="gal-note">CPU対戦でそのキャラクターに勝つと一枚絵が解放される。解放済みの画像はタップすると全画面で原画全体を表示できる。勝利数はこのブラウザに保存される。5勝・10勝の段階差分は今後の追加枠として、進捗だけ先に表示している。</p>
+        <div class="gal-grid" id="galleryGrid"></div>
+      </section>
+
+      <!-- キャラクター選択 -->
+      <section class="screen hidden" id="screenSelect">
+      <!-- start bar -->
+      <div class="start-bar select-bar" id="startBar">
+        <div class="select-head"><h2>キャラクター選択</h2><span class="cpu-note" id="cpuNote">CPU対戦：相手はデフォルトでランダム、指定もできる</span></div>
+        <div class="char-grid" id="charGrid"></div>
+        <div class="select-detail" id="charDetail">カードを選ぶと、特性の詳細がここに表示される。</div>
+        <div class="opp-wrap" id="oppWrap">
+          <div class="opp-head"><h3>対戦相手（CPU）</h3><span>デフォルトはランダム（残り5人から抽選）</span></div>
+          <div class="cpu-grid" id="cpuGrid"></div>
+        </div>
+        <p class="start-lead">
+          目の前の相手と向き合う<b>POV対戦</b>。各ターンは<b>READY</b>と<b>3・2・1</b>のカウントダウンから始まり、終わった瞬間に行動開始。
+          あなたの番は<b>攻撃ビュー</b>――<b>残り3秒のゲージ</b>が減る間に相手の体をタッチして狙いを決める（長押し中はゲージ停止）。
+          長押しするほど円が育って攻撃は<b>強く・遅く・円が大きく</b>なり、離した瞬間に発射。3秒以内に触れなければ不発になる。
+          相手の番は<b>防御ビュー</b>――攻撃はいつ来るか分からない。来たら<b>縮小リング</b>が消える前に中心をタップ。
+          残り<b>60%より大</b>で押せばガード（削りあり）、<b>30%より大〜60%以下</b>でジャストガード（削りなし）、<b>30%以下</b>まで待って合わせればカウンター（反撃10が自動発動）。消えてからでは遅い――<b>消滅後はガード不能</b>だ。
+        </p>
+        <button class="big-btn start-btn" id="startBtn" disabled style="opacity:.45">キャラクターを選んでください</button>
+        <button class="ghost-btn" id="backMenuBtn" type="button">メニューに戻る</button>
+      </div>
+
+      </section>
+
+      <!-- フレンド対戦（部屋作成／入室／ロビー） -->
+      <section class="screen hidden" id="screenFriend">
+        <div class="sub-head"><h2>フレンド対戦</h2><button class="back-btn" id="friendBackBtn" type="button">← メニューに戻る</button></div>
+        <div class="start-bar select-bar">
+          <p class="friend-status" id="friendStatus">招待リンクを作って、相手に送ってください。</p>
+          <div class="friend-home" id="friendHome">
+            <button class="big-btn" id="friendCreateBtn" type="button">招待リンクを作る</button>
+            <p class="friend-note">リンクを開いた相手は、自動でこの部屋に入ります。</p>
+          </div>
+          <div class="friend-room hidden" id="friendRoom">
+            <div class="friend-invite" id="friendInvite">
+              <div class="invite-label">招待リンク</div>
+              <input class="invite-input" id="friendInviteUrl" type="text" readonly value="" aria-label="招待リンク" />
+              <button class="ghost-btn" id="friendCopyBtn" type="button">リンクをコピー</button>
+              <p class="friend-note" id="friendInviteNote">リンクを相手に送ってください。相手がリンクを開くと、自動でこの部屋に入ります。</p>
+            </div>
+            <div class="friend-lobby hidden" id="friendLobby">
+              <div class="select-head"><h2>キャラクター選択</h2><span class="cpu-note" id="friendOppPick">相手：入室待ち</span></div>
+              <div class="char-grid" id="friendCharGrid"></div>
+              <div class="select-detail" id="friendCharDetail">自分のキャラクターを選んでください。選んだら変更できません。</div>
+            </div>
+            <button class="ghost-btn" id="friendLeaveBtn" type="button">退出する</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 先攻・後攻抽選（コイントス） -->
+      <section class="screen hidden" id="screenCoin">
+        <div class="sub-head"><h2>先攻・後攻抽選</h2><button class="back-btn" id="coinLeaveBtn" type="button">退出する</button></div>
+        <div class="start-bar coin-bar">
+          <div class="coin-stage">
+            <div class="coin" id="coinEl" aria-hidden="true">
+              <div class="coin-face coin-front"><svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 5 L56.5 18 L54 57 L46 57 L43.5 18 Z" /><rect x="29" y="57" width="42" height="7.5" rx="3.5" /><rect x="46.4" y="64.5" width="7.2" height="16" rx="3.4" /><circle cx="50" cy="86.5" r="6" /></svg></div>
+              <div class="coin-face coin-back"><svg viewBox="0 0 100 100" fill="currentColor"><polygon points="50,6 62,37 95,37 68,57 78,90 50,70 22,90 32,57 5,37 38,37" /></svg></div>
+            </div>
+          </div>
+          <div class="coin-result" id="coinResult"></div>
+          <p class="coin-status" id="coinStatus">コインを投げています…</p>
+          <button class="big-btn coin-ready" id="coinReadyBtn" type="button" style="display:none">戦闘へ進む</button>
+        </div>
+      </section>
+
+      <!-- 対戦画面 -->
+      <section class="screen hidden" id="screenBattle">
+        <div class="battle-top">
+          <button class="mini-ghost" id="quitBtn" type="button">← メニューに戻る（対戦を中断）</button>
+          <div class="tut-bar hidden" id="tutBar"></div>
+        </div>
+
+      <!-- POV stage -->
+      <div class="stage" id="stage" data-view="idle" role="button" aria-label="対戦画面。READYが消えたら行動開始。攻撃ビューでは相手の体をタッチし、長押しでチャージ、離すと攻撃。防御ビューではリングの中心をタップ" tabindex="-1">
+        <img class="pov-img guard" alt="構えてこちらを見据える対戦相手（構え）" />
+        <img class="pov-img atk" alt="踏み込んで攻撃を繰り出す対戦相手（攻撃）" />
+        <img class="pov-img hit" alt="被弾して痛がる対戦相手（喰らい）" />
+        <div class="view-badge" id="viewBadge">待機中<small>対戦開始で攻撃ビューへ</small></div>
+        <div class="banner" id="banner">読み込み中…</div>
+
+        <div class="aim-gauge" id="aimGauge"><div class="aim-track"><div class="aim-fill" id="aimFill"></div></div><div class="aim-label" id="aimLabel"></div></div>
+        <button class="heal-btn" id="healBtn" type="button">回復する（最大HPの10%）</button>
+        <div class="charge-ring" id="chargeRing"><div class="dot"></div><div class="charge-label" id="chargeLabel"></div></div>
+        <div class="ready-pop" id="readyPop"><div class="ready-sub" id="readySub"></div></div>
+        <div class="ready-img-wrap" id="readyImgWrap"><img class="ready-img word" id="readyImg" alt="READY" /></div>
+
+        <div class="parry-zone" id="parryZone"></div>
+        <div class="ring" id="ring"><div class="dot"></div><div class="ms" id="ringMs"></div></div>
+        <div class="judge-pop" id="judgePop"><div class="big" id="judgeBig"></div><div class="sub" id="judgeSub"></div></div>
+
+        <div class="overlay hidden" id="endOverlay">
+          <div class="overlay-card">
+            <div class="result-title" id="resultTitle">勝利</div>
+            <div class="result-stats" id="resultStats"></div>
+            <button class="big-btn" id="againBtn">もう一戦</button>
+            <button class="ghost-btn" id="reselectBtn" type="button">キャラクター選択に戻る</button>
+            <button class="ghost-btn" id="menuBtn" type="button">メニューに戻る</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- scoreboard：体力ゲージは画面下 -->
+      <div class="scoreboard" aria-label="体力ゲージ">
+        <div>
+          <div class="fighter-tag tag-you"><span class="who" id="tagYouName">YOU</span><span class="jp">あなた</span><span class="hpnum" id="hpYouNum">100</span></div>
+          <div class="hpbar"><div class="hpfill you" id="hpYouFill"></div></div>
+        </div>
+        <div class="center-info">
+          <div class="rally-label">RALLY</div>
+          <div class="rally-num" id="rallyNum">0</div>
+          <div class="speed-line">縮小 <b id="spdNow">550–1100ms</b></div>
+        </div>
+        <div>
+          <div class="fighter-tag tag-cpu"><span class="hpnum" id="hpCpuNum">100</span><span class="jp">相手</span><span class="who" id="tagCpuName">CPU</span></div>
+          <div class="hpbar cpu"><div class="hpfill cpu" id="hpCpuFill"></div></div>
+        </div>
+      </div>
+
+      <!-- attack spec & trait room -->
+      <div class="panel-row">
+        <div class="mini-card">
+          <h2>攻撃（全キャラ共通）</h2>
+          <div class="atk-stats">
+            <div class="stat"><b>3秒</b><span>攻撃までの猶予</span></div>
+            <div class="stat"><b>最大1秒</b><span>長押しチャージ</span></div>
+            <div class="stat"><b>8–24</b><span>直撃ダメージ</span></div>
+            <div class="stat"><b>2–8</b><span>ガード時の削り</span></div>
+            <div class="stat"><b>550–1100ms</b><span>リング縮小</span></div>
+            <div class="stat"><b>10</b><span>カウンター反撃</span></div>
+          </div>
+          <p class="atk-note">攻撃は1種類のまま、長押しのチャージ量で強さ・遅さ・円の大きさが連続的に変わる。溜めるほど強いが、円は大きく遅くなって捌きやすい。ラリーが続くほど縮小は5%ずつ速くなる（下限320ms）。</p>
+        </div>
+        <div class="mini-card">
+          <h2>キャラクター特性（対戦中）</h2>
+          <div class="trait-line"><span class="trait-side you">あなた</span><div><b id="traitYouName">未選択</b><div class="trait-desc" id="traitYouDesc">キャラクターを選ぶと特性がここに表示される。</div></div></div>
+          <div class="trait-line"><span class="trait-side cpu">相手</span><div><b id="traitCpuName">未決定</b><div class="trait-desc" id="traitCpuDesc">対戦開始時にランダムで決まる。</div></div></div>
+          <p class="atk-note">攻撃そのものは全キャラ共通。違いは特性だけ――HP・ダメージ・リングの速さ・判定範囲がキャラごとにずれる。</p>
+        </div>
+      </div>
+      <div class="hint" id="hint"><b>攻撃ビュー</b>：カウントダウンが終わったら3秒以内にタッチ。長押しでチャージ（円が育つ）、離して発射。<b>防御ビュー</b>：カウントダウンが終わったらいつ来てもいいように構え、リングの中心をタップ。</div>
+
+      <!-- lower -->
+      <div class="lower">
+        <div class="card">
+          <h2>判定の仕組み</h2>
+          <table class="judge-table">
+            <tr><th>タイミング</th><th>結果</th></tr>
+            <tr><td>リング残り 60%より大</td><td>ガード（削り2–8）</td></tr>
+            <tr><td>残り 30%より大〜60%以下</td><td>ジャストガード（削りなし）</td></tr>
+            <tr><td>残り 30%以下（金の破線）</td><td><b>カウンター（反撃10が自動発動）</b></td></tr>
+            <tr><td>リング消滅後（残り0%）</td><td>ガード不能＝満ダメージ（8–24）</td></tr>
+            <tr><td>リングの外をタップ</td><td>防御失敗（防御は1回だけ）</td></tr>
+          </table>
+          <ul class="rules">
+            <li>リングの<b>今の大きさ＝許容誤差</b>。遅いタップほど中心を正確に狙う必要がある。</li>
+            <li>攻撃側は<b>最大3秒</b>待てる（ディレイ）。ただし触らずに時間切れになると<b>不発</b>でターンが移る。長押ししている間はゲージが止まる。</li>
+            <li><b>長押しチャージ</b>（最大1秒）でダメージ8→24、縮小550→1100ms、円も大きく育つ。溜めた分だけ捌きやすくもなる。</li>
+            <li>交換が続くほどリングは<b>5%ずつ速く</b>なる（下限320ms）。</li>
+            <li>攻守が替わるたびに画面は<b>攻撃ビュー／防御ビュー</b>へ切り替わり、毎ターン<b>READY→3・2・1</b>のカウントダウンが終わってから行動開始。</li>
+            <li><b>キャラクター特性</b>がHP・ダメージ・リング速度・カウンター範囲・回復をずらす。相手の特性は対戦開始時に決まる（特性パネル参照）。</li>
+            <li><b>ルシアが防御側のときは例外</b>：ガード／ジャストガードは成立しない。残り50%以下のタップはすべてカウンター、50%より大きいタイミングのタップも無タップも満ダメージになる。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>戦況ログ</h2>
+          <ul class="log" id="log"></ul>
+        </div>
+      </div>
+      </section>
+    </div>
+
+    <!-- ギャラリー全画面ビューア：原画全体を contain で表示（タップ／閉じるで戻る） -->
+    <div class="gal-viewer" id="galViewer" role="dialog" aria-modal="true" aria-label="ご褒美画像の拡大表示">
+      <img id="galViewerImg" alt="" />
+      <button class="viewer-close" id="galViewerClose" type="button">閉じる ✕</button>
+      <div class="viewer-cap" id="galViewerCap"></div>
+    </div>
+
+    <script>
+      "use strict";
+      /* ================= 設定（攻撃は1種類。長押しチャージで連続変化） ================= */
+      var ATTACK = { dmgBase: 8, dmgVar: 16, chipBase: 2, chipVar: 6, counter: 10,
+                     msBase: 550, msVar: 550, msFloor: 320,
+                     holdMax: 1000, aimWindow: 3000, readyMs: 900, countMs: 550 };
+      var COUNTER_F = 0.30;   // 残り割合がこれ以下でカウンター
+      var JUST_F  = 0.60;   // 残り割合がこれ以下でジャストガード（これより大はガード、0でガード不能）
+
+      /* ================= 状態 ================= */
+      var S = {
+        hpYou: 100, hpCpu: 100, maxYou: 100, maxCpu: 100, rally: 0,
+        charYou: null, charCpu: null,
+        povStage: null,          // 相手の現在表示中のステージ段階（"" 通常 / "life50" ライフ50 / "life25" ライフ25）
+        seraDeepest: "",         // セラ相手専用ラッチ：その試合で到達した最深段階（"" / "life50" / "life25"）。回復しても浅い段階へは戻らない
+        phase: "idle",           // idle | ready | aim | holding | wait | ring | resolve | over
+        turn: "you",             // 攻撃側
+        ring: null,              // {attacker, defender, fx, fy, p, dmg, chip, dur, R0, t0, raf, cpuTapAt, cpuTapXY, done}
+        hold: null,              // {fx, fy, t0} 長押しチャージ中
+        aimEnd: 0, aimRaf: 0,    // 攻撃猶予ゲージの締切と描画ループ
+        bestCounterMs: null,
+        exchanges: 0,
+        timers: []
+      };
+
+      /* ================= DOM ================= */
+      function $(id) { return document.getElementById(id); }
+      var stage = $("stage"),
+          ringEl = $("ring"), ringMs = $("ringMs"), parryZone = $("parryZone"),
+          banner = $("banner"), viewBadge = $("viewBadge"),
+          judgePop = $("judgePop"),
+          judgeBig = $("judgeBig"), judgeSub = $("judgeSub"),
+          readyPop = $("readyPop"), readySub = $("readySub"), readyImg = $("readyImg"), readyImgWrap = $("readyImgWrap"),
+          aimGauge = $("aimGauge"), aimFill = $("aimFill"), aimLabel = $("aimLabel"),
+          chargeRing = $("chargeRing"), chargeLabel = $("chargeLabel"),
+          logEl = $("log");
+
+      /* 静的 <img> の src はレジストリ経由でのみ設定する（HTML にパスを直書きしない） */
+      $("gameLogo").src = ASSETS.titleLogo;
+      stage.querySelector(".pov-img.guard").src = ASSETS.povGuard.morgana;
+      stage.querySelector(".pov-img.atk").src = ASSETS.povAttack.morgana;
+      stage.querySelector(".pov-img.hit").src = ASSETS.povHit.morgana;
+      readyImg.src = ASSETS.ready;
+
+      /* ================= キャラクター選択 ================= */
+      var CHARACTERS = [
+        { id: "vera",    name: "ヴェラ",   img: ASSETS.selectVera,    pos: "50% 50%", hp: 130,
+          trait: "鉄壁の体躯", short: ["最大HP130（通常100）", "殴り合いの消耗戦に強い"],
+          desc: "最大HPが130（他は100）。殴り合いの消耗戦に強いタンク。" },
+        { id: "hex",     name: "ヘクス",   img: ASSETS.selectHex,     pos: "50% 50%",  hp: 100,
+          trait: "呪いの逆流", short: ["HP50%以下で攻撃×1.25", "HP25%以下で攻撃×1.5"],
+          desc: "自分の残りHPが50%以下で攻撃ダメージ×1.25、25%以下で×1.5に上がる（段階式）。削りは据え置き。" },
+        { id: "morgana", name: "モルガナ", img: ASSETS.selectMorgana, pos: "50% 50%",  hp: 100,
+          trait: "魅惑の踏み込み", short: ["自分の攻撃の防御リング", "0.85倍の速さで縮む"],
+          desc: "自分の攻撃の防御リングが通常の0.85倍の時間で縮む（速い）。相手が捌きにくい。" },
+        { id: "kanna",   name: "かんな",   img: ASSETS.selectKanna,   pos: "50% 50%", hp: 100,
+          trait: "神楽の勘", short: ["自分への攻撃リングは", "1.2倍ゆっくり縮む"],
+          desc: "自分への攻撃の防御リングが通常の1.2倍ゆっくり縮む。カウンターを狙いやすい。" },
+        { id: "lucia",   name: "ルシア",   img: ASSETS.selectLucia,   pos: "50% 50%", hp: 100,
+          trait: "逆書きの反撃", short: ["ガードできない代わり", "50%以下は全部カウンター"],
+          desc: "ガードできない。代わりに残り50%以下はすべてカウンター。防御側のときガード／ジャストガードは成立せず、残り50%より大きいタイミングのタップも無タップも満ダメージ。早押しは禁物――50%を切るまで待つのがルシアの戦い方。" },
+        { id: "sera",    name: "セラ",     img: ASSETS.selectSera,    pos: "50% 50%",  hp: 100,
+          trait: "荒療治", short: ["攻撃ターンを回復に使える", "最大HPの10%を回復"],
+          desc: "自分の攻撃ターンに、攻撃の代わりに最大HPの10%を回復できる。" }
+      ];
+      function charById(id) { for (var i = 0; i < CHARACTERS.length; i++) if (CHARACTERS[i].id === id) return CHARACTERS[i]; return null; }
+      function charName(id) { var c = charById(id); return c ? c.name : "？"; }
+      /* キャラ選択カードの生成（CPU選択画面とフレンド対戦ロビーで共用） */
+      function createCharCard(c, onPick) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "char-card";
+        b.setAttribute("data-char", c.id);
+        b.setAttribute("aria-pressed", "false");
+        var thumb = document.createElement("div"); thumb.className = "thumb";
+        var img = document.createElement("img");
+        img.src = c.img; img.alt = c.name + "のイラスト";
+        img.style.objectPosition = c.pos;
+        thumb.appendChild(img);
+        var meta = document.createElement("div"); meta.className = "meta";
+        var nm = document.createElement("div"); nm.className = "cname";
+        nm.appendChild(document.createTextNode(c.name));
+        var hp = document.createElement("span"); hp.className = "hp"; hp.textContent = "HP " + c.hp;
+        nm.appendChild(hp);
+        var tn = document.createElement("div"); tn.className = "tname"; tn.textContent = "特性：" + c.trait;
+        var td = document.createElement("div"); td.className = "tdesc";
+        c.short.forEach(function (line) {
+          var s = document.createElement("span"); s.className = "tline"; s.textContent = line;
+          td.appendChild(s);
+        });
+        meta.appendChild(nm); meta.appendChild(tn); meta.appendChild(td);
+        b.appendChild(thumb); b.appendChild(meta);
+        b.addEventListener("click", function () { audio(); onPick(c.id); });
+        return b;
+      }
+      function buildCharGrid() {
+        var grid = $("charGrid");
+        CHARACTERS.forEach(function (c) {
+          grid.appendChild(createCharCard(c, selectChar));
+        });
+      }
+      function selectChar(id) {
+        S.charYou = id;
+        var c = charById(id);
+        var cards = $("charGrid").children;
+        for (var i = 0; i < cards.length; i++) {
+          var on = cards[i].getAttribute("data-char") === id;
+          cards[i].classList.toggle("selected", on);
+          cards[i].setAttribute("aria-pressed", on ? "true" : "false");
+        }
+        var detail = $("charDetail");
+        detail.innerHTML = "";
+        var b = document.createElement("b"); b.textContent = c.name + " ― 特性「" + c.trait + "」";
+        detail.appendChild(b);
+        detail.appendChild(document.createTextNode("：" + c.desc));
+        var btn = $("startBtn");
+        btn.disabled = false;
+        btn.style.opacity = "";
+        btn.textContent = c.name + "で対戦開始";
+        $("traitYouName").textContent = c.name + "「" + c.trait + "」";
+        $("traitYouDesc").textContent = c.desc;
+      }
+      function pickCpuChar() {
+        var pool = CHARACTERS.filter(function (c) { return c.id !== S.charYou; });
+        S.charCpu = pool[Math.floor(Math.random() * pool.length)].id;
+      }
+      /* 段階の深さ（ラッチの比較用）： "" ＜ "life50" ＜ "life25" */
+      function stageRank(key) { return key === "life25" ? 2 : key === "life50" ? 1 : 0; }
+      /* 対戦相手の現在HPからステージ段階を求める（全キャラ共通、3段階制）。
+         残りHPが絶対値50超＝""（通常）、50以下26以上＝"life50"、25以下＝"life25"
+         （いずれも割合ではない。HP130のヴェラでは割合より遅く切り替わる）。
+         HPが回復したら浅い段階へ戻る。
+         ただしセラ相手だけは例外：回復で絵が戻るのが不自然なため、到達した最深段階を
+         S.seraDeepest にラッチし、その試合の間は浅い段階へ戻らない
+         （ラッチは試合開始・再戦時にリセットされる） */
+      function stageKeyFor() {
+        if (!S.charCpu || !S.maxCpu) return "";
+        var key = "";
+        if (S.hpCpu <= 25) key = "life25";
+        else if (S.hpCpu <= 50) key = "life50";
+        if (S.charCpu === "sera") {
+          if (stageRank(key) > stageRank(S.seraDeepest)) S.seraDeepest = key;
+          return S.seraDeepest;
+        }
+        return key;
+      }
+      /* 対戦相手のキャラ別POVセット（guard=構え／atk=攻撃／hit=被弾）。
+         現在HPの段階に合ったセットを返す */
+      function povSetFor(id) {
+        var set = {
+          guard: ASSETS.povGuard[id],
+          atk: ASSETS.povAttack[id],
+          hit: ASSETS.povHit[id]
+        };
+        var key = stageKeyFor();
+        if (key === "life25") {
+          set.guard = ASSETS.povGuardLife25[id];
+          set.atk = ASSETS.povAttackLife25[id];
+          set.hit = ASSETS.povHitLife25[id];
+        } else if (key === "life50") {
+          set.guard = ASSETS.povGuardLife50[id];
+          set.atk = ASSETS.povAttackLife50[id];
+          set.hit = ASSETS.povHitLife50[id];
+        }
+        return set;
+      }
+      /* 試合開始時に、対戦相手のPOVセットを先読み＋デコードしておく。
+         通常セット＋ライフ50セット＋ライフ25セットの全9点を先読みする
+         （段階切替で表示が遅れないように） */
+      function preloadPovSet(id) {
+        var srcs = [
+          ASSETS.povGuard[id], ASSETS.povAttack[id], ASSETS.povHit[id],
+          ASSETS.povGuardLife50[id], ASSETS.povAttackLife50[id], ASSETS.povHitLife50[id],
+          ASSETS.povGuardLife25[id], ASSETS.povAttackLife25[id], ASSETS.povHitLife25[id]
+        ];
+        srcs.forEach(function (src) {
+          if (!src) return;
+          var im = new Image();
+          im.src = src;
+          if (im.decode) im.decode().catch(function () { /* デコード失敗時は通常の読み込みに任せる */ });
+        });
+      }
+      /* HP変化のたびに呼ばれる：相手の段階が変わっていたら、現在表示中のポーズのまま
+         （guard/atk/hit の各 img の src だけを）段階に合った絵へ差し替える */
+      function syncStageImages() {
+        if (!S.charCpu) return;
+        var key = stageKeyFor();
+        if (key === S.povStage) return;
+        S.povStage = key;
+        var set = povSetFor(S.charCpu);
+        stage.querySelector(".pov-img.guard").src = set.guard;
+        stage.querySelector(".pov-img.atk").src = set.atk;
+        stage.querySelector(".pov-img.hit").src = set.hit;
+      }
+      function applyMatchup() {
+        var you = charById(S.charYou), cpu = charById(S.charCpu);
+        S.maxYou = you.hp; S.maxCpu = cpu.hp;
+        $("tagYouName").textContent = you.name;
+        $("tagCpuName").textContent = cpu.name;
+        $("traitCpuName").textContent = cpu.name + "「" + cpu.trait + "」";
+        $("traitCpuDesc").textContent = cpu.desc;
+        var g = stage.querySelector(".pov-img.guard"),
+            a = stage.querySelector(".pov-img.atk"),
+            h = stage.querySelector(".pov-img.hit");
+        /* ステージには常時「対戦相手」の絵を出す：自分の攻撃ターン＝相手の構え、
+           自分の防御ターン＝相手の攻撃、直撃時＝相手の被弾
+           （切替は CSS の data-view / show-hit が担う）。 */
+        var set = povSetFor(cpu.id);
+        g.src = set.guard; a.src = set.atk; h.src = set.hit;
+        S.povStage = stageKeyFor();
+        g.style.objectPosition = ""; a.style.objectPosition = ""; h.style.objectPosition = "";
+        g.alt = "構えてこちらを見据える" + cpu.name + "（対戦相手・構え）";
+        a.alt = "踏み込んで攻撃を繰り出す" + cpu.name + "（対戦相手・攻撃）";
+        h.alt = "被弾して痛がる" + cpu.name + "（対戦相手・喰らい）";
+        preloadPovSet(cpu.id);
+      }
+      /* セラの回復：攻撃ターンを回復に使う（最大HPの10%） */
+      function doHeal(side) {
+        var isYou = side === "you";
+        S.phase = "resolve";
+        var amount = Math.round((isYou ? S.maxYou : S.maxCpu) * 0.10);
+        if (isYou) S.hpYou = Math.min(S.maxYou, S.hpYou + amount);
+        else S.hpCpu = Math.min(S.maxCpu, S.hpCpu + amount);
+        sfx.just();
+        showJudge("回復", (isYou ? "あなた" : "相手") + "は攻撃をやめて HP +" + amount, "#7de08a");
+        floater(0.5, 0.4, "+" + amount, "#7de08a", 34);
+        log((isYou ? "あなた" : "相手") + "（セラ）は攻撃せず回復、HP+" + amount);
+        refreshScore();
+        S.exchanges++;
+        later(nextTurn, 1000);
+      }
+      $("healBtn").addEventListener("click", function () {
+        if (S.phase !== "aim" || S.charYou !== "sera") return;
+        audio();
+        endAimUi();
+        stage.classList.remove("aiming");
+        if (S.mode === "friend") { friendSendHeal(); return; }
+        doHeal("you");
+      });
+      buildCharGrid();
+
+      /* ================= 画面遷移・モード・ギャラリー ================= */
+      S.mode = "cpu"; S.cpuChoice = null; S.tut = null;
+      var WINS_KEY = "reflexTouchWinsV1";
+      function loadWins() {
+        try { var w = JSON.parse(localStorage.getItem(WINS_KEY)); return w && typeof w === "object" ? w : {}; }
+        catch (e) { return {}; }
+      }
+      S.wins = loadWins();
+      function saveWins() { try { localStorage.setItem(WINS_KEY, JSON.stringify(S.wins)); } catch (e) { /* 保存できない環境では今回分のみ */ } }
+      function winsOf(id) { return S.wins[id] || 0; }
+
+      var SCREEN_IDS = { menu: "screenMenu", gallery: "screenGallery", select: "screenSelect", battle: "screenBattle", friend: "screenFriend", coin: "screenCoin" };
+      function showScreen(name) {
+        for (var k in SCREEN_IDS) $(SCREEN_IDS[k]).classList.toggle("hidden", k !== name);
+        if (name === "menu") {
+          var unlocked = CHARACTERS.filter(function (c) { return winsOf(c.id) >= 1; }).length;
+          $("menuGalSmall").textContent = "CPU対戦で勝つと一枚絵が解放（現在 " + unlocked + "／6 解放）";
+        }
+        window.scrollTo(0, 0);
+      }
+      function setMode(m) {
+        S.mode = m;
+        var tut = m === "tutorial";
+        $("oppWrap").style.display = tut ? "none" : "";
+        $("cpuNote").textContent = tut
+          ? "チュートリアル：3ステップのガイド付き練習（相手は練習用CPU）"
+          : "CPU対戦：相手はデフォルトでランダム、指定もできる";
+        showScreen("select");
+      }
+      /* 対戦相手の指定：デフォルトはランダム（null） */
+      function buildCpuPicker() {
+        var grid = $("cpuGrid");
+        grid.innerHTML = "";
+        var opts = [{ id: null, name: "ランダム" }].concat(CHARACTERS.map(function (c) { return { id: c.id, name: c.name }; }));
+        opts.forEach(function (o) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "cpu-chip" + (S.cpuChoice === o.id ? " selected" : "");
+          b.textContent = o.name + (o.id === null ? "（デフォルト）" : "");
+          b.setAttribute("aria-pressed", S.cpuChoice === o.id ? "true" : "false");
+          b.addEventListener("click", function () { audio(); S.cpuChoice = o.id; buildCpuPicker(); });
+          grid.appendChild(b);
+        });
+      }
+      /* ギャラリー：1勝で一枚絵解放、5勝・10勝は将来の段階差分の進捗枠。
+         ご褒美画像はキャラ選択用の3:4トリミングではなく、トリミング前の原画（1280×1920）を使う。
+         ただしカード表示はサムネイル（480×720）で代用し、原画はビューアを開いたときだけ読み込む */
+      var GAL_IMGS = { vera: ASSETS.galleryVera, hex: ASSETS.galleryHex, morgana: ASSETS.galleryMorgana, kanna: ASSETS.galleryKanna, lucia: ASSETS.galleryLucia, sera: ASSETS.gallerySera };
+      function galSrc(c) { return GAL_IMGS[c.id]; }
+      /* カード表示は小さいサムネイル（480×720）を使い、原画（1280×1920）は全画面ビューアを開いたときだけ読み込む */
+      var GAL_THUMBS = { vera: ASSETS.galleryVeraThumb, hex: ASSETS.galleryHexThumb, morgana: ASSETS.galleryMorganaThumb, kanna: ASSETS.galleryKannaThumb, lucia: ASSETS.galleryLuciaThumb, sera: ASSETS.gallerySeraThumb };
+      function galThumbSrc(c) { return GAL_THUMBS[c.id]; }
+      function buildGallery() {
+        var grid = $("galleryGrid");
+        grid.innerHTML = "";
+        CHARACTERS.forEach(function (c) {
+          var w = winsOf(c.id), unlocked = w >= 1;
+          var card = document.createElement("div");
+          card.className = "gal-card" + (unlocked ? "" : " locked");
+          var thumb = document.createElement("div"); thumb.className = "thumb";
+          var img = document.createElement("img");
+          img.loading = "lazy";
+          img.decoding = "async";
+          img.src = galThumbSrc(c);
+          img.alt = unlocked ? c.name + "のイラスト" : "未解放キャラクターのシルエット";
+          thumb.appendChild(img);
+          if (!unlocked) {
+            var q = document.createElement("div"); q.className = "gal-q"; q.textContent = "？";
+            thumb.appendChild(q);
+          }
+          var meta = document.createElement("div"); meta.className = "meta";
+          var nm = document.createElement("div"); nm.className = "cname";
+          nm.textContent = unlocked ? c.name : "？？？";
+          var st = document.createElement("div"); st.className = "gal-status";
+          st.textContent = unlocked ? "解放済み ― CPU対戦 " + w + "勝" : "未解放 ― CPU対戦でこのキャラに勝つと解放";
+          var ms = document.createElement("div"); ms.className = "gal-ms";
+          [[1, "1勝：一枚絵"], [5, "5勝：段階2"], [10, "10勝：段階3"]].forEach(function (m) {
+            var chip = document.createElement("span");
+            chip.className = "gal-chip" + (w >= m[0] ? " done" : "");
+            chip.textContent = (w >= m[0] ? "✓ " : "") + m[1];
+            ms.appendChild(chip);
+          });
+          meta.appendChild(nm); meta.appendChild(st); meta.appendChild(ms);
+          card.appendChild(thumb); card.appendChild(meta);
+          if (unlocked) {
+            card.classList.add("openable");
+            card.setAttribute("role", "button");
+            card.setAttribute("tabindex", "0");
+            card.setAttribute("aria-label", c.name + "のご褒美画像を全画面で表示");
+            st.textContent = "解放済み ― CPU対戦 " + w + "勝（タップで全画面表示）";
+            var openIt = function () { openGalViewer(c); };
+            card.addEventListener("click", openIt);
+            card.addEventListener("keydown", function (e) {
+              if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openIt(); }
+            });
+          }
+          grid.appendChild(card);
+        });
+      }
+      /* ご褒美の全画面ビューア：原画全体を contain で表示。未解放は対象外 */
+      function openGalViewer(c) {
+        audio();
+        var im = $("galViewerImg");
+        im.src = galSrc(c);
+        im.alt = c.name + "のイラスト（全画面表示）";
+        $("galViewerCap").textContent = c.name + " ― タップで閉じる";
+        $("galViewer").classList.add("open");
+      }
+      function closeGalViewer() {
+        $("galViewer").classList.remove("open");
+        $("galViewerImg").removeAttribute("src");
+      }
+      $("galViewer").addEventListener("click", function () { closeGalViewer(); });
+      $("galViewerClose").addEventListener("click", function (e) { e.stopPropagation(); closeGalViewer(); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && $("galViewer").classList.contains("open")) closeGalViewer();
+      });
+      /* チュートリアル */
+      var TUT_STEPS = {
+        1: "ステップ1／3：攻撃 ― 相手の体をタッチして長押しチャージ、離すと発射",
+        2: "ステップ2／3：防御 ― 縮小リングが消える前に中心をタップ",
+        3: "ステップ3／3：カウンター ― 残り30%以下（金の破線の内側）まで待ってタップ"
+      };
+      function updateTutBar() {
+        var bar = $("tutBar");
+        if (S.tut) { bar.classList.remove("hidden"); bar.textContent = "チュートリアル　" + TUT_STEPS[S.tut.step]; }
+        else bar.classList.add("hidden");
+      }
+      function tutAdvance(outcome) {
+        if (!S.tut) return;
+        S.hpYou = S.maxYou; S.hpCpu = S.maxCpu;   /* 練習用：ステップごとに全回復 */
+        refreshScore();
+        if (S.tut.step === 1) {
+          S.tut.step = 2; S.turn = "cpu";
+          log("チュートリアル：ステップ2 防御へ");
+          updateTutBar(); beginTurn(); return;
+        }
+        if (S.tut.step === 2) {
+          if (outcome === "block" || outcome === "just" || outcome === "parry") {
+            S.tut.step = 3;
+            log("チュートリアル：防御成功。ステップ3 カウンターへ");
+          } else {
+            log("チュートリアル：もう一度。リングが消える前に中心をタップ");
+          }
+          S.turn = "cpu"; updateTutBar(); beginTurn(); return;
+        }
+        if (outcome === "parry") { tutComplete(); return; }
+        log("チュートリアル：もう一度。残り30%以下まで待ってタップ");
+        S.turn = "cpu"; updateTutBar(); beginTurn();
+      }
+      function tutComplete() {
+        S.phase = "over";
+        S.tut = null;
+        stage.classList.remove("aiming", "defending", "show-hit");
+        hideRing(); endAimUi();
+        updateTutBar();
+        var title = $("resultTitle");
+        title.textContent = "チュートリアル完了！";
+        title.className = "result-title win";
+        $("resultStats").innerHTML = "攻撃・防御・カウンターの3ステップをクリア。<br>次はCPU対戦で実戦だ。";
+        $("againBtn").textContent = "もう一度練習する";
+        $("endOverlay").classList.remove("hidden");
+        log("チュートリアル完了");
+      }
+      /* 対戦を中断して画面を離れるときの後片付け */
+      function stopBattle() {
+        clearTimers();
+        if (S.ring) { cancelAnimationFrame(S.ring.raf); S.ring.done = true; }
+        cancelAnimationFrame(S.aimRaf);
+        S.phase = "idle"; S.hold = null; S.tut = null;
+        stage.classList.remove("ko", "hurt", "show-hit", "aiming", "defending");
+        hideRing(); endAimUi();
+        readyPop.classList.remove("show"); readyImgWrap.classList.remove("show");
+        judgePop.classList.remove("show");
+        $("endOverlay").classList.add("hidden");
+        $("againBtn").textContent = "もう一戦";
+        $("againBtn").style.opacity = "";
+        $("reselectBtn").style.display = "";
+        updateTutBar();
+        setView("idle", "待機中", "メニューからモードを選ぼう");
+        setBanner("待機中", "メニューからモードを選ぼう");
+      }
+      $("menuTutBtn").addEventListener("click", function () { audio(); setMode("tutorial"); });
+      $("menuCpuBtn").addEventListener("click", function () { audio(); setMode("cpu"); });
+      $("menuGalBtn").addEventListener("click", function () { audio(); buildGallery(); showScreen("gallery"); });
+      $("galBackBtn").addEventListener("click", function () { audio(); showScreen("menu"); });
+      $("backMenuBtn").addEventListener("click", function () { audio(); showScreen("menu"); });
+      $("quitBtn").addEventListener("click", function () { audio(); if (S.mode === "friend") { friendLeave(); return; } stopBattle(); showScreen("menu"); });
+      $("menuBtn").addEventListener("click", function () { audio(); if (S.mode === "friend") { friendLeave(); return; } stopBattle(); showScreen("menu"); });
+      buildCpuPicker();
+
+      /* ================= 成功率ログ（匿名・回数ベース集計） =================
+         1試合ぶんを端末内で集計し、試合終了時に ./stats-api へ1回だけ POST する。
+         送信失敗（プレビュー環境・単体HTML・CSP等）は完全に無視し、ゲームに影響させない。
+         計測対象：CPU戦＝プレイヤーが防御した交換のみ（CPUの防御結果は抽選方式なので混ぜない）／
+         フレンド戦＝自分の端末で自分が防御した交換のみ。試合結果はフレンド戦の
+         ホスト端末からのみ送信し、CPU戦の結果は送らない。チュートリアルは対象外。 */
+      var STATS_KEY = "reflexTouchStatsOptInV1";
+      var STAT = { defense: {}, matches: {} };
+      function statsOptIn() {
+        try { return localStorage.getItem(STATS_KEY) !== "0"; } catch (e) { return true; }
+      }
+      function statReset() { STAT = { defense: {}, matches: {} }; }
+      /* dBucket：その攻撃に実際に適用されたリング縮小時間D（特性・ラリー加速の補正後） */
+      function statDBucket(d) { return d < 400 ? "d0" : d < 550 ? "d1" : d < 700 ? "d2" : d < 900 ? "d3" : "d4"; }
+      /* rallyBand：その交換時点のラリー数 */
+      function statRallyBand(r) { return r <= 6 ? "r0" : r <= 14 ? "r1" : "r2"; }
+      function statRecordDefense(mode, defChar, atkChar, dur, rally, outcome) {
+        var key = mode + "|" + defChar + "|" + atkChar + "|" + statDBucket(dur) + "|" + statRallyBand(rally);
+        var row = STAT.defense[key];
+        if (!row) row = STAT.defense[key] = { counter: 0, just: 0, guard: 0, none: 0, fail: 0 };
+        if (typeof row[outcome] === "number") row[outcome]++;
+      }
+      function statRecordMatch(mode, winnerChar, loserChar, turns) {
+        STAT.matches[mode + "|" + winnerChar + "|" + loserChar] = { w: 1, turns: turns };
+      }
+      function statsSend() {
+        try {
+          if (!statsOptIn()) return;   /* オプトアウト時は送信しない */
+          var def = STAT.defense, mat = STAT.matches, has = false, k;
+          for (k in def) { has = true; break; }
+          if (!has) for (k in mat) { has = true; break; }
+          if (!has) return;
+          statReset();   /* 二重送信防止：送るぶんはここで確定し、失敗してもリトライしない */
+          if (!window.fetch) return;
+          fetch("./stats-api", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ op: "report", defense: def, matches: mat })
+          }).catch(function () { /* 送信失敗は完全に無視する */ });
+        } catch (e) { /* 集計の都合でゲームを止めない */ }
+      }
+      /* メニュー最下部のオプトアウトトグル（既定ON、localStorageに保存） */
+      function renderStatsToggle() {
+        var on = statsOptIn();
+        var btn = $("statsToggleBtn");
+        btn.textContent = "プレイ集計：" + (on ? "ON" : "OFF");
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+      }
+      $("statsToggleBtn").addEventListener("click", function () {
+        audio();
+        try { localStorage.setItem(STATS_KEY, statsOptIn() ? "0" : "1"); } catch (e) { /* 保存できない環境では既定ONのまま */ }
+        renderStatsToggle();
+      });
+      renderStatsToggle();
+      /* ギャラリーはここでは構築しない：原画6点は重いため、ギャラリー画面を
+         開く操作（menuGalBtn のハンドラ）で初めて buildGallery() が走り、
+         その時点で画像の読み込みが始まる（遅延読み込み）。 */
+
+      /* ================= サウンド（斬撃音は固定ファイル／他は簡易シンセ） ================= */
+      var AC = null;
+      function audio() {
+        if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; } }
+        if (AC && AC.state === "suspended") AC.resume();
+        return AC;
+      }
+      function tone(freq, dur, type, vol, when) {
+        var ac = audio(); if (!ac) return;
+        var t = ac.currentTime + (when || 0);
+        var o = ac.createOscillator(), g = ac.createGain();
+        o.type = type || "square"; o.frequency.value = freq;
+        g.gain.setValueAtTime(vol || 0.06, t);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g); g.connect(ac.destination);
+        o.start(t); o.stop(t + dur + 0.02);
+      }
+      /* ============ 素材の先読み（タイトル表示時点で開始） ============
+         対戦で使う画像は Image() で読み込み＋デコードまで済ませ、
+         効果音は Audio 要素の preload に加えて Web Audio へデコードしておく。
+         対戦開始時に読み込み待ち・デコード待ちが発生しないようにするためのもの。
+         対象は対戦に必要なもの（READY・カウントダウン・ロゴ・選択画面画像・
+         効果音）だけ。POV絵はキャラ別で点数が多いため、試合開始時に
+         対戦相手の分だけ applyMatchup() から先読みする。
+         ギャラリー原画は先読みせず、ギャラリーを開いたときに読む。 */
+      var PRELOAD_IMGS = [
+        ASSETS.ready, ASSETS.count3, ASSETS.count2, ASSETS.count1,
+        ASSETS.titleLogo,
+        ASSETS.selectVera, ASSETS.selectHex, ASSETS.selectMorgana,
+        ASSETS.selectKanna, ASSETS.selectLucia, ASSETS.selectSera
+      ];
+      PRELOAD_IMGS.forEach(function (src) {
+        var im = new Image();
+        im.src = src;
+        if (im.decode) im.decode().catch(function () { /* デコード失敗時は通常の読み込みに任せる */ });
+      });
+      /* 斬撃音「ザシュッ」／カウンター音（実録の剣戟音）：固定ファイルのみを再生する。
+         合成音は一切重ねない（カウンター成功時に合成の上昇音が混ざって「ピコリン」に
+         聞こえる不具合があったため）。デコード済みバッファがあれば即時再生し、
+         無ければ preload 済みの Audio 要素で再生する。 */
+      var slashAudio = new Audio(ASSETS.slash);
+      slashAudio.preload = "auto";
+      try { slashAudio.load(); } catch (e) { /* 読み込み失敗時は無音で続行 */ }
+      var counterAudio = new Audio(ASSETS.counter);
+      counterAudio.preload = "auto";
+      try { counterAudio.load(); } catch (e) { /* 読み込み失敗時は無音で続行 */ }
+      var sfxBuffers = {};
+      function decodeSfx(name, url) {
+        var ac = audio();
+        if (!ac || !window.fetch) return;
+        fetch(url).then(function (res) { return res.arrayBuffer(); }).then(function (buf) {
+          return new Promise(function (resolve) {
+            try { ac.decodeAudioData(buf, resolve, function () { resolve(null); }); }
+            catch (e) { resolve(null); }
+          });
+        }).then(function (decoded) { if (decoded) sfxBuffers[name] = decoded; })
+          .catch(function () { /* デコード失敗時は Audio 要素側の再生に任せる */ });
+      }
+      decodeSfx("slash", ASSETS.slash);
+      decodeSfx("counter", ASSETS.counter);
+      function playSfxFile(name) {
+        var ac = audio();
+        var buf = sfxBuffers[name];
+        if (ac && buf) {
+          try {
+            var srcNode = ac.createBufferSource();
+            srcNode.buffer = buf;
+            srcNode.connect(ac.destination);
+            srcNode.start(0);
+            return;
+          } catch (e) { /* バッファ再生に失敗したら要素再生へ落とす */ }
+        }
+        var el = name === "slash" ? slashAudio : counterAudio;
+        try {
+          el.pause();
+          el.currentTime = 0;
+          var p = el.play();
+          if (p && p.catch) p.catch(function () { /* 自動再生制限時は次回タップ以降で鳴る */ });
+        } catch (e) { /* 音が出なくてもゲームは止めない */ }
+      }
+      function slashSound() { playSfxFile("slash"); }
+      function counterSound() { playSfxFile("counter"); }
+      var sfx = {
+        launch: function () { tone(220, 0.08, "square", 0.05); },
+        block:  function () { tone(160, 0.1, "triangle", 0.08); },
+        just:   function () { tone(520, 0.09, "square", 0.06); tone(780, 0.12, "square", 0.06, 0.07); },
+        slash:  function () { slashSound(); },
+        counter: function () { counterSound(); },
+        hit:    function () { tone(90, 0.22, "sawtooth", 0.1); tone(55, 0.3, "triangle", 0.12, 0.02); },
+        miss:   function () { tone(140, 0.15, "sawtooth", 0.07); },
+        ko:     function () { tone(392, 0.15, "square", 0.07); tone(311, 0.15, "square", 0.07, 0.14); tone(233, 0.34, "square", 0.08, 0.28); }
+      };
+
+      /* ================= ユーティリティ ================= */
+      function later(fn, ms) { var id = setTimeout(fn, ms); S.timers.push(id); return id; }
+      function clearTimers() { S.timers.forEach(clearTimeout); S.timers = []; }
+      function attackDuration(p) {
+        return Math.max(ATTACK.msFloor, Math.round((ATTACK.msBase + ATTACK.msVar * p) * Math.pow(0.95, S.rally)));
+      }
+      function ringRadius(p) {
+        var sr = stage.getBoundingClientRect();
+        var scale = Math.min(1.5, Math.max(0.8, Math.min(sr.width, sr.height) / 520));
+        return (56 + 54 * p) * scale;
+      }
+      function chargeOf(holdMs) { return Math.min(1, Math.max(0, holdMs / ATTACK.holdMax)); }
+      function log(text) {
+        var li = document.createElement("li");
+        var t = document.createElement("span"); t.className = "t";
+        t.textContent = "R" + (S.rally + 1);
+        li.appendChild(t); li.appendChild(document.createTextNode(text));
+        logEl.insertBefore(li, logEl.firstChild);
+      }
+      function setBanner(main, sub) {
+        banner.innerHTML = "";
+        banner.appendChild(document.createTextNode(main));
+        if (sub) { var sm = document.createElement("small"); sm.textContent = sub; banner.appendChild(sm); }
+      }
+      function setView(view, label, sub) {
+        stage.setAttribute("data-view", view);
+        viewBadge.innerHTML = "";
+        viewBadge.appendChild(document.createTextNode(label));
+        if (sub) { var sm = document.createElement("small"); sm.textContent = sub; viewBadge.appendChild(sm); }
+      }
+      function refreshScore() {
+        $("hpYouNum").textContent = Math.max(0, S.hpYou);
+        $("hpCpuNum").textContent = Math.max(0, S.hpCpu);
+        var yf = $("hpYouFill"), cf = $("hpCpuFill");
+        yf.style.width = Math.max(0, S.hpYou / S.maxYou * 100) + "%";
+        cf.style.width = Math.max(0, S.hpCpu / S.maxCpu * 100) + "%";
+        yf.classList.toggle("low", S.hpYou <= S.maxYou * 0.3);
+        cf.classList.toggle("low", S.hpCpu <= S.maxCpu * 0.3);
+        $("rallyNum").textContent = S.rally;
+        syncStageImages();   /* HPが動いたら相手のステージ段階絵も追随させる（全モード共通の反映点） */
+      }
+      function floater(fx, fy, text, color, size) {
+        var sr = stage.getBoundingClientRect();
+        var el = document.createElement("div");
+        el.className = "floater"; el.textContent = text;
+        el.style.left = (sr.width * fx) + "px";
+        el.style.top = (sr.height * fy) + "px";
+        el.style.color = color; el.style.fontSize = (size || 30) + "px";
+        stage.appendChild(el);
+        setTimeout(function () { el.remove(); }, 1050);
+      }
+      function tapMark(x, y, color) {
+        var sr = stage.getBoundingClientRect();
+        var el = document.createElement("div");
+        el.className = "tapmark";
+        el.style.left = (x - sr.left) + "px"; el.style.top = (y - sr.top) + "px";
+        el.style.borderColor = color || "#fff";
+        stage.appendChild(el);
+        setTimeout(function () { el.remove(); }, 520);
+      }
+      function showJudge(big, sub, color) {
+        judgeBig.textContent = big; judgeBig.style.color = color || "#fff";
+        judgeSub.textContent = sub || "";
+        judgePop.classList.add("show");
+        later(function () { judgePop.classList.remove("show"); }, 950);
+      }
+      function stageHurt() {
+        stage.classList.remove("hurt");
+        void stage.offsetWidth;
+        stage.classList.add("hurt");
+        later(function () { stage.classList.remove("hurt"); }, 420);
+      }
+      /* プレイヤーの攻撃が直撃したときだけ、相手を喰らい絵に切り替える */
+      function showCpuHit() {
+        stage.classList.add("show-hit");
+        stageHurt();
+        later(function () { stage.classList.remove("show-hit"); }, 800);
+      }
+      /* ================= リング ================= */
+      function ringCenterPx(r) {
+        var sr = stage.getBoundingClientRect();
+        return { x: sr.width * r.fx, y: sr.height * r.fy };
+      }
+      function drawRing(r, elapsed) {
+        var f = Math.max(0, 1 - elapsed / r.dur);       // 残り割合
+        var R = r.R0 * f;
+        var c = ringCenterPx(r);
+        ringEl.style.display = "block";
+        ringEl.style.left = c.x + "px"; ringEl.style.top = c.y + "px";
+        ringEl.style.width = (R * 2) + "px"; ringEl.style.height = (R * 2) + "px";
+        ringEl.className = "ring " + (f <= r.cf ? "zone-parry" : f <= JUST_F ? "zone-just" : "zone-block");
+        ringMs.textContent = Math.max(0, Math.ceil(r.dur - elapsed)) + "ms";
+        var pz = r.R0 * r.cf;
+        parryZone.style.display = "block";
+        parryZone.style.left = c.x + "px"; parryZone.style.top = c.y + "px";
+        parryZone.style.width = (pz * 2) + "px"; parryZone.style.height = (pz * 2) + "px";
+        return f;
+      }
+      function hideRing() { ringEl.style.display = "none"; parryZone.style.display = "none"; }
+
+      function launchAttack(attacker, fx, fy, p) {
+        var defender = attacker === "you" ? "cpu" : "you";
+        var aChar = attacker === "you" ? S.charYou : S.charCpu;
+        var dChar = defender === "you" ? S.charYou : S.charCpu;
+        var durF = 1;
+        if (aChar === "morgana") durF *= 0.85;   // モルガナ特性：相手の防御リングは0.85倍の時間で縮む（速い）
+        if (dChar === "kanna") durF *= 1.2;      // かんな特性：自分への攻撃のリングは1.2倍ゆっくり縮む
+        var dmgMul = 1;
+        if (aChar === "hex") {                    // ヘクス特性：残りHPで段階的に攻撃UP（50%以下×1.25／25%以下×1.5）
+          var aHp = attacker === "you" ? S.hpYou : S.hpCpu;
+          var aMax = attacker === "you" ? S.maxYou : S.maxCpu;
+          var aRatio = Math.max(0, aHp) / aMax;
+          dmgMul = aRatio <= 0.25 ? 1.5 : aRatio <= 0.5 ? 1.25 : 1;
+        }
+        var r = {
+          attacker: attacker, defender: defender,
+          aChar: aChar, dChar: dChar,
+          cf: dChar === "lucia" ? 0.5 : COUNTER_F,   // ルシア特性：残り50%以下は全部カウンター
+          fx: fx, fy: fy, p: p,
+          dmg: Math.round((ATTACK.dmgBase + ATTACK.dmgVar * p) * dmgMul),
+          chip: Math.round(ATTACK.chipBase + ATTACK.chipVar * p),
+          dur: Math.max(260, Math.round(attackDuration(p) * durF)),
+          R0: ringRadius(p),
+          t0: performance.now(), done: false, raf: 0,
+          cpuTapAt: null, cpuTapXY: null
+        };
+        if (S.tut && defender === "you") r.dur = S.tut.step === 2 ? 1800 : 2100;   /* チュートリアル：防御ステップはゆっくり縮む */
+        S.ring = r; S.phase = "ring";
+        stage.classList.add("defending");
+        $("spdNow").textContent = r.dur + "ms";
+
+        if (defender === "cpu") planCpuDefense(r);
+        if (defender === "you") setBanner("相手の攻撃！", S.charYou === "lucia" ? "ガード不能――残り50%以下に合わせれば全部カウンター" : "リングが消える前に中心をタップ。残り30%以下でカウンター");
+        sfx.launch();
+
+        function frame(now) {
+          if (r.done) return;
+          var elapsed = now - r.t0;
+          drawRing(r, elapsed);
+          if (r.cpuTapAt !== null && elapsed >= r.cpuTapAt) { resolveTap(r, r.cpuTapXY, true); return; }
+          if (elapsed >= r.dur) { resolveTimeout(r); return; }
+          r.raf = requestAnimationFrame(frame);
+        }
+        r.raf = requestAnimationFrame(frame);
+      }
+
+      /* CPUの防御シミュレーション：結果→タイミングの順で決める */
+      function planCpuDefense(r) {
+        if (S.tut) { r.cpuTapAt = null; return; }   /* チュートリアル：CPUは防御しない（ステップ1は必ず当たる） */
+        if (r.dChar === "lucia") {
+          /* ルシア相手：残り50%以下は全部カウンター、それより上で受けるとガード不能 */
+          var rollL = Math.random();
+          var fL, outL;
+          if (rollL < 0.34)      { outL = "parry"; fL = 0.04 + Math.random() * 0.42; }
+          else if (rollL < 0.64) { outL = "early"; fL = 0.55 + Math.random() * 0.35; }
+          else                   { outL = "timeout"; fL = 0; }
+          if (outL === "timeout") { r.cpuTapAt = null; return; }
+          r.cpuTapAt = r.dur * (1 - fL);
+          var cL = ringCenterPx(r), RL = r.R0 * fL, srL = stage.getBoundingClientRect();
+          var distL = RL * Math.random() * 0.72, angL = Math.random() * Math.PI * 2;
+          r.cpuTapXY = { x: srL.left + cL.x + Math.cos(angL) * distL, y: srL.top + cL.y + Math.sin(angL) * distL, outcome: outL };
+          return;
+        }
+        var m = Math.pow(0.95, S.rally);              // 1→下限ほど小さい
+        var hard = (1 - m) * 0.55;                     // 加速するほどCPUも苦しくなる
+        var roll = Math.random();
+        var pParry = 0.07, pJust = 0.22, pBlock = 0.44, pMiss = 0.13 + hard * 0.5, pTime = 0.14 + hard * 0.5;
+        pBlock -= hard * 0.4; pJust -= hard * 0.25; pParry -= hard * 0.1;
+        var total = pParry + pJust + pBlock + pMiss + pTime;
+        roll *= total;
+        var f, outcome;
+        if (roll < pParry)            { outcome = "parry"; f = 0.03 + Math.random() * 0.25; }
+        else if (roll < pParry + pJust)  { outcome = "just";  f = 0.33 + Math.random() * 0.25; }
+        else if (roll < pParry + pJust + pBlock) { outcome = "block"; f = 0.63 + Math.random() * 0.32; }
+        else if (roll < pParry + pJust + pBlock + pMiss) { outcome = "miss"; f = 0.25 + Math.random() * 0.55; }
+        else { outcome = "timeout"; f = 0; }
+
+        if (outcome === "timeout") { r.cpuTapAt = null; return; }
+        r.cpuTapAt = r.dur * (1 - f);
+        var c = ringCenterPx(r), R = r.R0 * f, sr = stage.getBoundingClientRect();
+        var dist, ang = Math.random() * Math.PI * 2;
+        if (outcome === "miss") dist = R * (1.25 + Math.random() * 0.9);
+        else dist = R * Math.random() * 0.72;
+        r.cpuTapXY = { x: sr.left + c.x + Math.cos(ang) * dist, y: sr.top + c.y + Math.sin(ang) * dist, outcome: outcome };
+      }
+
+      /* ================= 判定 ================= */
+      function finishRing(r) {
+        r.done = true;
+        cancelAnimationFrame(r.raf);
+        hideRing();
+        stage.classList.remove("defending");
+        S.phase = "resolve";
+      }
+      function resolveTap(r, clientXY, isCpu) {
+        if (r.done) return;
+        var elapsed = performance.now() - r.t0;
+        var f = Math.max(0, 1 - elapsed / r.dur);
+        var c = ringCenterPx(r), sr = stage.getBoundingClientRect();
+        var tx = clientXY.x - sr.left, ty = clientXY.y - sr.top;
+        var dist = Math.hypot(tx - c.x, ty - c.y);
+        var R = r.R0 * f;
+        finishRing(r);
+        tapMark(clientXY.x, clientXY.y, dist <= R ? "#e9a820" : "#ff5a3c");
+        var outcome;
+        if (dist > R) outcome = "miss";
+        else if (r.dChar === "lucia") outcome = f <= r.cf ? "parry" : "luciafail";
+        else outcome = f <= r.cf ? "parry" : f <= JUST_F ? "just" : "block";
+        judge(r, outcome, elapsed, f);
+      }
+      function resolveTimeout(r) {
+        if (r.done) return;
+        finishRing(r);
+        judge(r, "timeout", r.dur, 0);
+      }
+      function judge(r, outcome, elapsed, f) {
+        var atkName = r.attacker === "you" ? "あなた" : "相手";
+        var defName = r.defender === "you" ? "あなた" : "相手";
+        /* 成功率ログ：CPU戦でプレイヤーが防御した交換のみ計測する */
+        if (S.mode === "cpu" && r.defender === "you") {
+          statRecordDefense("cpu", r.dChar, r.aChar, r.dur, S.rally,
+            outcome === "parry" ? "counter" : outcome === "just" ? "just" : outcome === "block" ? "guard" : outcome === "timeout" ? "none" : "fail");
+        }
+        var reaction = Math.round(elapsed);
+        var pct = Math.round(f * 100);
+        var dmgDef = 0, dmgAtk = 0, big = "", sub = "", color = "#fff";
+
+        if (outcome === "parry") {
+          dmgAtk = ATTACK.counter;
+          big = "カウンター！"; color = "#ffd257";
+          sub = "反撃 " + dmgAtk + "ダメージ（残り " + pct + "%／反応 " + reaction + "ms）";
+          sfx.counter();   /* カウンター成功時は counter.mp3（実録の剣戟音）のみを鳴らす。合成音は重ねない。シェイクと喰らい絵は直撃と同じ */
+          if (r.defender === "you" && (S.bestCounterMs === null || reaction > S.bestCounterMs)) S.bestCounterMs = reaction;
+          log(atkName + "の攻撃を" + defName + "がカウンター、反撃" + dmgAtk + "（残り" + pct + "%／" + reaction + "ms）");
+        } else if (outcome === "just") {
+          big = "ジャストガード"; color = "#5fe0d4";
+          sub = "削りなし（残り " + pct + "%／反応 " + reaction + "ms）";
+          sfx.just();
+          log(atkName + "の攻撃を" + defName + "がジャストガード（残り" + pct + "%／" + reaction + "ms）");
+        } else if (outcome === "block") {
+          dmgDef = r.chip;
+          big = "ガード"; color = "#f3ead9";
+          sub = "削り " + dmgDef + "ダメージ（残り " + pct + "%／反応 " + reaction + "ms）";
+          sfx.block();
+          log(atkName + "の攻撃を" + defName + "がガード、削り" + dmgDef + "（残り" + pct + "%／" + reaction + "ms）");
+        } else if (outcome === "luciafail") {
+          dmgDef = r.dmg;
+          big = "ガード不能";
+          color = "#ff7a5c";
+          sub = "ルシアはガードできない（残り50%より上）→ " + dmgDef + "ダメージ";
+          sfx.slash();
+          log(atkName + "の攻撃、" + defName + "（ルシア）はガードできず被弾" + dmgDef);
+        } else if (outcome === "miss") {
+          dmgDef = r.dmg;
+          big = r.defender === "you" ? "防御失敗…" : "防御を外した！";
+          color = "#ff7a5c";
+          sub = "リングの外をタップ → " + dmgDef + "ダメージ";
+          sfx.slash();
+          log(atkName + "の攻撃、" + defName + "はタップを外して被弾" + dmgDef);
+        } else { // timeout
+          dmgDef = r.dmg;
+          big = "ガード不能";
+          color = "#ff7a5c";
+          sub = "リング消滅 → " + dmgDef + "ダメージ";
+          sfx.slash();
+          log(atkName + "の攻撃、" + defName + "はガード不能で被弾" + dmgDef);
+        }
+        showJudge(big, sub, color);
+
+        if (dmgDef > 0) {
+          if (r.defender === "you") { S.hpYou -= dmgDef; stageHurt(); }
+          else {
+            S.hpCpu -= dmgDef;
+            /* 直撃（防御外し／ガード不能）のときだけ喰らい絵＋シェイク。削りでは切り替えない */
+            if (r.attacker === "you" && (outcome === "miss" || outcome === "timeout" || outcome === "luciafail")) showCpuHit();
+          }
+          floater(r.fx, r.fy, "-" + dmgDef, "#ff5a3c", 36);
+        }
+        if (dmgAtk > 0) {
+          /* カウンター反撃が相手に入る場面は直撃と同じ演出：あなたが受ければシェイク、
+             相手が受ければ喰らい絵＋シェイク（showCpuHit） */
+          if (r.attacker === "you") {
+            S.hpYou -= dmgAtk;
+            stageHurt();
+          }
+          else { S.hpCpu -= dmgAtk; showCpuHit(); }
+          floater(0.5, 0.32, "-" + dmgAtk, "#ffd257", 34);
+        }
+        refreshScore();
+        S.exchanges++;
+
+        if (S.tut) { later(function () { tutAdvance(outcome); }, 1150); return; }
+        if (S.hpYou <= 0 || S.hpCpu <= 0) { later(gameOver, 800); return; }
+        later(nextTurn, 1050);
+      }
+      function nextTurn() {
+        S.rally++;
+        S.turn = S.turn === "you" ? "cpu" : "you";
+        refreshScore();
+        beginTurn();
+      }
+
+      /* ================= ターン開始（READY → 3・2・1 → 行動開始） ================= */
+      var COUNT_SRCS = [ASSETS.count3, ASSETS.count2, ASSETS.count1];
+      function showReadyStep(src, alt, isNum) {
+        readyImg.src = src;
+        readyImg.alt = alt;
+        readyImg.classList.remove("pop");
+        readyImg.classList.toggle("num", !!isNum);
+        readyImg.classList.toggle("word", !isNum);
+        void readyImg.offsetWidth;   // アニメーションを頭から再生
+        readyImg.classList.add("pop");
+      }
+      function beginTurn() {
+        var you = S.turn === "you";
+        S.phase = "ready";
+        stage.classList.remove("aiming");
+        if (you) setView("offense", "攻撃ビュー", "カウントダウン後に狙える");
+        else setView("defense", "防御ビュー", "カウントダウン後に攻撃が来る");
+        setBanner(you ? "あなたの攻撃" : "相手の攻撃", "カウントダウンが終わるまで待て");
+        readySub.textContent = you
+          ? "あなたの攻撃 ― タッチで狙い、長押しでチャージ"
+          : "相手の攻撃 ― リングが消える前に中心をタップ";
+        if (S.tut) {
+          setBanner("チュートリアル " + S.tut.step + "／3", TUT_STEPS[S.tut.step]);
+          readySub.textContent = TUT_STEPS[S.tut.step];
+        }
+        readyPop.className = "ready-pop show " + (you ? "atk" : "def");
+        readyImgWrap.classList.add("show");
+        showReadyStep(ASSETS.ready, "READY", false);
+        tone(392, 0.12, "square", 0.06);
+        var step = 0;
+        var countStep = function () {
+          if (S.phase !== "ready") return;
+          if (step < COUNT_SRCS.length) {
+            showReadyStep(COUNT_SRCS[step], String(3 - step), true);
+            tone(523 + step * 110, 0.09, "square", 0.06);
+            step++;
+            later(countStep, ATTACK.countMs);
+          } else {
+            readyPop.classList.remove("show");
+            readyImgWrap.classList.remove("show");
+            if (S.turn === "you") startAimWindow();
+            else startCpuDelay();
+          }
+        };
+        later(countStep, ATTACK.readyMs);
+      }
+
+      /* プレイヤーの攻撃：3秒ゲージ（長押し中は停止） */
+      function startAimWindow() {
+        S.phase = "aim";
+        stage.classList.add("aiming");
+        setBanner("あなたの攻撃", "3秒以内にタッチ。長押しでチャージ、離すと発射");
+        S.aimEnd = performance.now() + ATTACK.aimWindow;
+        aimGauge.classList.add("show");
+        $("healBtn").classList.toggle("show", S.charYou === "sera" && !S.tut);
+        cancelAnimationFrame(S.aimRaf);
+        S.aimRaf = requestAnimationFrame(aimTick);
+      }
+      function aimTick(now) {
+        if (S.phase !== "aim" && S.phase !== "holding") return;
+        var rem;
+        if (S.phase === "holding") {
+          rem = Math.max(0, S.aimEnd - S.hold.t0);   // 長押し時間はゲージに数えない
+          drawCharge(chargeOf(now - S.hold.t0));
+          aimLabel.textContent = "チャージ中 ― ゲージ停止中";
+        } else {
+          rem = S.aimEnd - now;
+          aimLabel.textContent = "攻撃まで " + Math.max(0, rem / 1000).toFixed(2) + "s";
+        }
+        aimFill.style.width = Math.max(0, rem / ATTACK.aimWindow * 100) + "%";
+        aimFill.classList.toggle("low", rem < 1000);
+        if (S.phase === "aim" && rem <= 0) { aimFizzle(); return; }
+        S.aimRaf = requestAnimationFrame(aimTick);
+      }
+      function endAimUi() {
+        cancelAnimationFrame(S.aimRaf);
+        aimGauge.classList.remove("show");
+        chargeRing.style.display = "none";
+        $("healBtn").classList.remove("show");
+      }
+      function aimFizzle() {
+        if (S.mode === "friend") { friendFizzle(); return; }
+        endAimUi();
+        stage.classList.remove("aiming");
+        S.phase = "resolve";
+        setBanner("時間切れ…", "3秒以内にタッチできず、攻撃は不発");
+        showJudge("不発", "攻撃の機会を逃した", "#ff7a5c");
+        sfx.miss();
+        log("あなたの攻撃は時間切れで不発");
+        S.exchanges++;
+        if (S.tut) {
+          log("チュートリアル：もう一度。3秒以内にタッチして長押しチャージ");
+          later(function () { if (S.tut) { S.turn = "you"; beginTurn(); } }, 1000);
+          return;
+        }
+        later(nextTurn, 1000);
+      }
+      function drawCharge(p) {
+        if (!S.hold) return;
+        var sr = stage.getBoundingClientRect();
+        var R = ringRadius(p);
+        chargeRing.style.display = "block";
+        chargeRing.style.left = (sr.width * S.hold.fx) + "px";
+        chargeRing.style.top = (sr.height * S.hold.fy) + "px";
+        chargeRing.style.width = (R * 2) + "px";
+        chargeRing.style.height = (R * 2) + "px";
+        chargeLabel.textContent = "CHARGE " + Math.round(p * 100) + "% ／ DMG " + Math.round(ATTACK.dmgBase + ATTACK.dmgVar * p);
+      }
+
+      /* CPUの攻撃：最大3秒のディレイ＋ランダムなチャージ量 */
+      function startCpuDelay() {
+        S.phase = "wait";
+        if (!S.tut && S.charCpu === "sera" && S.hpCpu > 0 && S.hpCpu <= S.maxCpu * 0.6 && Math.random() < 0.6) {
+          /* CPUセラ：傷が深いと攻撃をやめて回復に回る */
+          setBanner("相手の様子が…", "セラは攻撃をやめて治療するようだ");
+          later(function () { if (S.phase === "wait") doHeal("cpu"); }, 800 + Math.random() * 700);
+          return;
+        }
+        setBanner("相手の攻撃が来る…", "いつ来るかは分からない――出現に反射しろ");
+        var delay = 200 + Math.random() * 2800;
+        var p = Math.random();
+        later(function () {
+          if (S.phase !== "wait") return;
+          var pt = cpuPickPoint();
+          launchAttack("cpu", pt.fx, pt.fy, p);
+        }, delay);
+      }
+      /* POV画面に対する相手の体の狙いどころ（画面比率） */
+      var CPU_POINTS = [
+        { fx: 0.52, fy: 0.20 }, { fx: 0.50, fy: 0.38 }, { fx: 0.50, fy: 0.56 },
+        { fx: 0.34, fy: 0.34 }, { fx: 0.66, fy: 0.34 },
+        { fx: 0.28, fy: 0.50 }, { fx: 0.72, fy: 0.50 },
+        { fx: 0.38, fy: 0.72 }, { fx: 0.62, fy: 0.72 },
+        { fx: 0.50, fy: 0.86 }, { fx: 0.30, fy: 0.86 }, { fx: 0.70, fy: 0.86 }
+      ];
+      var lastCpuPoint = null;
+      function cpuPickPoint() {
+        var p, tries = 0;
+        do {
+          p = CPU_POINTS[Math.floor(Math.random() * CPU_POINTS.length)];
+          tries++;
+        } while (lastCpuPoint && tries < 6 &&
+                 Math.hypot(p.fx - lastCpuPoint.fx, p.fy - lastCpuPoint.fy) < 0.3);
+        lastCpuPoint = p;
+        return { fx: Math.min(0.92, Math.max(0.08, p.fx + (Math.random() - 0.5) * 0.07)),
+                 fy: Math.min(0.93, Math.max(0.07, p.fy + (Math.random() - 0.5) * 0.05)) };
+      }
+
+      /* ================= 入力 ================= */
+      function stageFraction(clientX, clientY) {
+        var sr = stage.getBoundingClientRect();
+        return { fx: (clientX - sr.left) / sr.width, fy: (clientY - sr.top) / sr.height };
+      }
+      function beginHold(clientX, clientY) {
+        var p = stageFraction(clientX, clientY);
+        p.fx = Math.min(0.95, Math.max(0.05, p.fx));
+        p.fy = Math.min(0.97, Math.max(0.03, p.fy));
+        S.hold = { fx: p.fx, fy: p.fy, t0: performance.now() };
+        S.phase = "holding";
+        drawCharge(0);
+      }
+      function releaseHold() {
+        if (!S.hold) return;
+        var p = chargeOf(performance.now() - S.hold.t0);
+        var fx = S.hold.fx, fy = S.hold.fy;
+        S.hold = null;
+        endAimUi();
+        stage.classList.remove("aiming");
+        if (S.mode === "friend") { friendSendAttack(fx, fy, p); return; }
+        setBanner("あなたの攻撃！", "チャージ " + Math.round(p * 100) + "% ― 相手が対応できるか…");
+        launchAttack("you", fx, fy, p);
+      }
+      stage.addEventListener("pointerdown", function (e) {
+        if (e.target.closest(".overlay") || e.target.closest("button")) return;
+        audio();
+        if (S.mode === "friend") {
+          if (S.phase === "aim") beginHold(e.clientX, e.clientY);
+          else if (S.phase === "ring" && S.ring) friendDefenseTap(e.clientX, e.clientY);
+          return;
+        }
+        if (S.phase === "aim") {
+          beginHold(e.clientX, e.clientY);
+        } else if (S.phase === "ring" && S.ring && S.ring.defender === "you") {
+          resolveTap(S.ring, { x: e.clientX, y: e.clientY }, false);
+        }
+      });
+      window.addEventListener("pointerup", function () {
+        if (S.phase === "holding") releaseHold();
+      });
+      window.addEventListener("pointercancel", function () {
+        if (S.phase === "holding") releaseHold();
+      });
+      /* 座標なしの発火（キーボード等）は中央を狙う／受ける */
+      stage.addEventListener("click", function (e) {
+        if (e.clientX || e.clientY) return;   // 実座標つきは pointerdown 済み
+        audio();
+        var sr = stage.getBoundingClientRect();
+        var cx = sr.left + sr.width * 0.5, cy = sr.top + sr.height * 0.45;
+        if (S.mode === "friend") {
+          if (S.phase === "aim") { endAimUi(); stage.classList.remove("aiming"); friendSendAttack(0.5, 0.45, 0); }
+          else if (S.phase === "ring" && S.ring) friendDefenseTap(cx, cy);
+          return;
+        }
+        if (S.phase === "aim") { endAimUi(); stage.classList.remove("aiming"); launchAttack("you", 0.5, 0.45, 0); }
+        else if (S.phase === "ring" && S.ring && S.ring.defender === "you") {
+          resolveTap(S.ring, { x: cx, y: cy }, false);
+        }
+      });
+
+      /* ================= 勝敗・開始 ================= */
+      function gameOver() {
+        S.phase = "over";
+        hideRing();
+        endAimUi();
+        readyPop.classList.remove("show");
+        readyImgWrap.classList.remove("show");
+        S.hold = null;
+        stage.classList.remove("aiming", "defending", "show-hit");
+        stage.classList.add("ko");
+        var win = S.hpCpu <= 0 && S.hpYou > 0;
+        var draw = S.hpCpu <= 0 && S.hpYou <= 0;
+        setView(win ? "offense" : "defense", draw ? "相打ち" : win ? "決着" : "決着", "");
+        sfx.ko();
+        $("againBtn").textContent = "もう一戦";
+        var unlockNote = "";
+        if (win && !S.tut) {
+          var before = winsOf(S.charCpu);
+          S.wins[S.charCpu] = before + 1;
+          saveWins();
+          unlockNote = before === 0
+            ? "<br><b>ギャラリーに" + charName(S.charCpu) + "の一枚絵が解放された！</b>（" + charName(S.charCpu) + " 1勝）"
+            : "<br>" + charName(S.charCpu) + "への勝利数：<b>" + (before + 1) + "勝</b>";
+        }
+        var title = $("resultTitle");
+        title.textContent = draw ? "相打ち" : win ? "勝利！" : "敗北…";
+        title.className = "result-title " + (win ? "win" : "lose");
+        $("resultStats").innerHTML =
+          "交換数 <b>" + S.exchanges + "</b> ／ 到達ラリー <b>" + S.rally + "</b><br>" +
+          "あなたの残りHP <b>" + Math.max(0, S.hpYou) + "</b> ／ 相手 <b>" + Math.max(0, S.hpCpu) + "</b><br>" +
+          (S.bestCounterMs !== null
+            ? "最も際どいカウンターは反応 <b>" + S.bestCounterMs + "ms</b> 時点の一撃"
+            : "今回はカウンターなし ― 次は残り30%以下まで待ってみよう") + unlockNote;
+        $("endOverlay").classList.remove("hidden");
+        log("試合終了：" + (draw ? "相打ち" : win ? "あなたの勝利" : "相手の勝利"));
+        if (S.mode === "cpu") statsSend();   /* 成功率ログ：CPU戦は防御集計のみ送信（試合結果は送らない） */
+      }
+      function reset() {
+        clearTimers();
+        statReset();   /* 成功率ログ：新しい試合の集計を始める */
+        if (S.ring) { cancelAnimationFrame(S.ring.raf); S.ring.done = true; }
+        S.hpYou = S.maxYou; S.hpCpu = S.maxCpu; S.rally = 0; S.exchanges = 0;
+        S.seraDeepest = "";      /* セラの最深段階ラッチは試合ごとにリセット */
+        S.turn = "you"; S.bestCounterMs = null; lastCpuPoint = null; S.hold = null;
+        stage.classList.remove("ko", "hurt", "show-hit");
+        hideRing(); judgePop.classList.remove("show");
+        endAimUi(); readyPop.classList.remove("show");
+        readyImgWrap.classList.remove("show");
+        $("spdNow").textContent = "550–1100ms";
+        logEl.innerHTML = "";
+        if (S.tut) S.tut.step = 1;
+        updateTutBar();
+        refreshScore();
+        log("試合開始：" + charName(S.charYou) + "（あなた） vs " + charName(S.charCpu) + "（CPU）。先手はあなた");
+        if (S.tut) log("チュートリアル開始：ステップ1 攻撃 ― 長押しチャージと狙いを覚えよう");
+        beginTurn();
+      }
+      $("startBtn").addEventListener("click", function () {
+        if (!S.charYou) return;
+        audio();
+        if (S.mode === "tutorial") {
+          S.tut = { step: 1 };
+          S.charCpu = "morgana";   /* チュートリアルの練習相手はモルガナ固定（彼女のPOV3点セットを使う） */
+        } else {
+          S.tut = null;
+          if (S.cpuChoice) S.charCpu = S.cpuChoice; else pickCpuChar();
+        }
+        applyMatchup();
+        showScreen("battle");
+        reset();
+      });
+      $("reselectBtn").addEventListener("click", function () {
+        audio();
+        stopBattle();
+        showScreen("select");
+      });
+      $("againBtn").addEventListener("click", function () {
+        audio();
+        if (S.mode === "friend") { friendRematch(); return; }
+        $("endOverlay").classList.add("hidden");
+        if (S.mode === "tutorial") S.tut = { step: 1 };
+        reset();
+      });
+
+      /* ================= フレンド対戦（サーバー権威＋600msポーリング） =================
+         部屋状態はサーバー（./friend-api）が保持し、クライアントは状態をポーリングで同期する。
+         HP・ターン・勝敗はサーバー状態が正。防御判定だけは防御側が見たリングに対して
+         ローカルで確定し、結果（guard/just/counter/none/fail）をサーバーへ申告する。 */
+      var F = {
+        code: null, seat: 0, revision: -1, state: null, host: false,
+        timer: null, errCount: 0,
+        inBattle: false, lastTurn: -1, lastResultTurn: -1, ringTurn: -1,
+        finishedHandled: false, winRecorded: false, inOpening: false
+      };
+      var FRIEND_OFFLINE_MSG = "フレンド対戦は本番環境（iruca.tech/battle）でのみ遊べます";
+      /* 招待URLの基点は本番公開先で固定する（プレビュー内のURLは相手に届かないため） */
+      var FRIEND_BASE_URL = "https://iruca.tech/battle/";
+      function friendSetStatus(msg) { $("friendStatus").textContent = msg; }
+      function friendPost(body) {
+        return fetch("./friend-api", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        }).then(function (r) { return r.json(); });
+      }
+      /* 状態JSONを受けたら revision の進みを見て画面へ反映する。{error} は状態表示へ */
+      function friendHandleData(data) {
+        if (!data || typeof data !== "object") return false;
+        if (data.error) { friendSetStatus(data.error); return false; }
+        if (typeof data.revision === "number") {
+          if (data.revision !== F.revision) { F.revision = data.revision; friendApply(data); }
+          else F.state = data;
+        }
+        return true;
+      }
+      function friendPoll() {
+        if (!F.code) return;
+        fetch("./friend-api?code=" + encodeURIComponent(F.code), { cache: "no-store" })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data && data.error) { friendSetStatus(data.error); return; }
+            F.errCount = 0;
+            friendHandleData(data);
+          })
+          .catch(function () {
+            F.errCount++;
+            if (F.errCount >= 2) {
+              friendSetStatus("通信エラー");
+              if (F.inBattle && (S.phase === "wait" || S.phase === "resolve")) setBanner("通信エラー", "再接続を試みています…");
+            }
+          });
+      }
+      function friendStartPolling() {
+        if (F.timer) clearInterval(F.timer);
+        F.timer = setInterval(friendPoll, 600);
+      }
+      function friendStopPolling() { if (F.timer) clearInterval(F.timer); F.timer = null; }
+
+      /* ---------- 部屋作成／入室 ---------- */
+      function friendShowRoom() {
+        $("friendHome").classList.add("hidden");
+        $("friendRoom").classList.remove("hidden");
+        /* 招待リンクの発行欄は部屋を作った側だけに表示する。リンクから来た側は
+           コードもURLも見ず、そのままキャラ選択へ進む */
+        $("friendInvite").classList.toggle("hidden", !F.host);
+        if (F.host) {
+          $("friendInviteUrl").value = FRIEND_BASE_URL + "#invite=" + F.code;
+          try { history.replaceState(null, "", "#invite=" + F.code); } catch (e) { /* ハッシュ更新失敗時は表示のみ */ }
+        }
+      }
+      function friendCreate() {
+        audio();
+        friendSetStatus("招待リンクを作成しています…");
+        friendPost({ op: "create" }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          if (!data || !data.code) { friendSetStatus(FRIEND_OFFLINE_MSG); return; }
+          F.code = data.code; F.revision = -1; F.host = true;
+          friendShowRoom();
+          friendSetStatus("招待リンクを作成しました。リンクを相手に送ってください。");
+          friendHandleData(data);
+          friendStartPolling();
+        }).catch(function () { friendSetStatus(FRIEND_OFFLINE_MSG); });
+      }
+      function friendJoin(code) {
+        code = String(code || "").replace(/\D/g, "");
+        if (!/^\d{8}$/.test(code)) return;
+        friendSetStatus("入室しています…");
+        friendPost({ op: "join", code: code }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          if (!data || typeof data !== "object") { friendSetStatus(FRIEND_OFFLINE_MSG); return; }
+          F.code = code; F.revision = -1; F.host = false;
+          friendShowRoom();
+          friendSetStatus("入室しました。");
+          friendHandleData(data);
+          friendStartPolling();
+        }).catch(function () { friendSetStatus(FRIEND_OFFLINE_MSG); });
+      }
+      function friendLeave() {
+        var code = F.code;
+        friendStopPolling();
+        if (code) friendPost({ op: "leave", code: code }).catch(function () { /* 退出通知の失敗は無視 */ });
+        F.code = null; F.state = null; F.revision = -1; F.host = false;
+        F.inBattle = false; F.finishedHandled = false; F.winRecorded = false; F.inOpening = false;
+        F.lastTurn = -1; F.lastResultTurn = -1; F.ringTurn = -1;
+        try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* ハッシュ削除失敗時は無視 */ }
+        stopBattle();
+        $("friendRoom").classList.add("hidden");
+        $("friendLobby").classList.add("hidden");
+        $("friendHome").classList.remove("hidden");
+        $("friendInviteNote").textContent = "リンクを相手に送ってください。相手がリンクを開くと、自動でこの部屋に入ります。";
+        friendSetStatus("招待リンクを作って、相手に送ってください。");
+        showScreen("menu");
+      }
+
+      /* ---------- 状態の反映 ---------- */
+      function friendApply(st) {
+        F.state = st; F.seat = st.seat;
+        if (st.code) F.code = st.code;
+        if (st.phase === "lobby") friendRenderLobby(st);
+        else if (st.phase === "opening") friendApplyOpening(st);
+        else if (st.phase === "battle") friendApplyBattle(st);
+        else if (st.phase === "finished") friendApplyFinished(st);
+      }
+      function friendRenderLobby(st) {
+        friendShowRoom();
+        var other = 1 - F.seat;
+        var lobby = $("friendLobby");
+        if (!st.occupied[other]) {
+          lobby.classList.add("hidden");
+          $("friendInviteNote").textContent = "リンクを相手に送ってください。相手がリンクを開くと、自動でこの部屋に入ります。";
+          friendSetStatus("相手の入室を待っています。リンクを相手に送ってください。");
+          return;
+        }
+        $("friendInviteNote").textContent = "相手が入室しました。";
+        lobby.classList.remove("hidden");
+        var myPick = st.fighters[F.seat], oppPick = st.fighters[other];
+        $("friendOppPick").textContent = "相手：" + (oppPick ? "選択済み" : "選択中");
+        friendSetStatus(myPick
+          ? (oppPick ? "両者そろいました。対戦開始…" : "あなたは「" + charName(myPick) + "」を選択済み。相手の選択を待っています。")
+          : "両者入室しました。自分のキャラクターを選んでください（選んだら変更できません）。");
+        var cards = $("friendCharGrid").children;
+        for (var i = 0; i < cards.length; i++) {
+          var on = cards[i].getAttribute("data-char") === myPick;
+          cards[i].classList.toggle("selected", on);
+          cards[i].setAttribute("aria-pressed", on ? "true" : "false");
+          cards[i].disabled = !!myPick;
+        }
+        if (myPick) {
+          var c = charById(myPick);
+          var detail = $("friendCharDetail");
+          detail.innerHTML = "";
+          var b = document.createElement("b");
+          b.textContent = c.name + " ― 特性「" + c.trait + "」";
+          detail.appendChild(b);
+          detail.appendChild(document.createTextNode("：" + c.desc + "（選択済み・変更不可）"));
+        }
+      }
+      function friendPick(id) {
+        var st = F.state;
+        if (!st || st.phase !== "lobby" || st.fighters[F.seat]) return;
+        friendPost({ op: "pick", code: F.code, fighter: id }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          friendHandleData(data);
+        }).catch(function () { friendSetStatus("通信エラー"); });
+      }
+
+      /* ---------- オープニング（先攻・後攻のコイントス） ----------
+         両者のキャラ選択がそろうとサーバーが phase='opening' にする。attacker は
+         サーバーが決めるので、両クライアントで結果は必ず一致する。両者が
+         {op:'ready'} を送るとサーバーが phase='battle' に進める。
+         再戦（rematch成立）も opening に戻るため、入るたびにトスを再生する。 */
+      function friendApplyOpening(st) {
+        if (F.finishedHandled) {
+          /* 再戦：終了表示を片付けて新規試合として扱う */
+          F.finishedHandled = false; F.winRecorded = false;
+          $("endOverlay").classList.add("hidden");
+          stage.classList.remove("ko");
+        }
+        F.inBattle = false;
+        if (!F.inOpening) {
+          F.inOpening = true;
+          showScreen("coin");
+          friendPlayToss(st);
+        }
+        friendRenderOpeningAck(st);
+      }
+      /* 金のコイン（表＝剣／裏＝星、キャラ中立の金銀メタル意匠）を約1.1秒トスし、
+         attacker===seat なら表（先攻）、そうでなければ裏（後攻）で止める */
+      function friendPlayToss(st) {
+        var meFirst = st.attacker === F.seat;
+        var coin = $("coinEl"), result = $("coinResult"), btn = $("coinReadyBtn");
+        result.textContent = "";
+        $("coinStatus").textContent = "コインを投げています…";
+        btn.style.display = "none";
+        coin.className = "coin";
+        void coin.offsetWidth;   /* アニメーションを頭から再生 */
+        var finish = function () {
+          if (!F.inOpening) return;
+          coin.className = "coin " + (meFirst ? "show-front" : "show-back");
+          result.textContent = meFirst ? "あなたが先攻です" : "あなたが後攻です";
+          result.style.color = meFirst ? "#ffd257" : "#5fe0d4";
+          $("coinStatus").textContent = meFirst
+            ? "先攻 ― 最初の攻撃はあなたから。"
+            : "後攻 ― 最初の攻撃は相手から。防御の構えで待とう。";
+          if (!(F.state && F.state.ack && F.state.ack[F.seat])) btn.style.display = "";
+          friendRenderOpeningAck(F.state || st);
+        };
+        var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduced) { finish(); return; }
+        coin.classList.add(meFirst ? "toss-front" : "toss-back");
+        later(finish, 1180);
+      }
+      function friendRenderOpeningAck(st) {
+        if (!st || st.phase !== "opening") return;
+        var mine = !!(st.ack && st.ack[F.seat]);
+        var theirs = !!(st.ack && st.ack[1 - F.seat]);
+        var btn = $("coinReadyBtn");
+        if (mine) {
+          btn.textContent = "準備完了"; btn.disabled = true; btn.style.opacity = ".55";
+          $("coinStatus").textContent = theirs ? "両者そろいました。対戦開始…" : "相手の準備待ち…";
+        } else {
+          btn.textContent = "戦闘へ進む"; btn.disabled = false; btn.style.opacity = "";
+          if (theirs) $("coinStatus").textContent = "相手は準備完了。あなたの「戦闘へ進む」で開始します。";
+        }
+      }
+      function friendSendReady() {
+        if (!F.code) return;
+        var btn = $("coinReadyBtn");
+        btn.textContent = "準備完了"; btn.disabled = true; btn.style.opacity = ".55";
+        friendPost({ op: "ready", code: F.code }).then(function (data) {
+          if (data && data.error) { $("coinStatus").textContent = data.error; return; }
+          if (!friendHandleData(data)) $("coinStatus").textContent = "通信エラー";
+        }).catch(function () { $("coinStatus").textContent = "通信エラー"; });
+      }
+
+      /* ---------- オンライン対戦 ---------- */
+      function friendEnterBattle(st) {
+        S.charYou = st.fighters[F.seat];
+        S.charCpu = st.fighters[1 - F.seat];
+        applyMatchup();
+        S.maxYou = st.maxHp[F.seat]; S.maxCpu = st.maxHp[1 - F.seat];
+        S.hpYou = st.hp[F.seat]; S.hpCpu = st.hp[1 - F.seat];
+        S.rally = st.rally; S.exchanges = st.turn;
+        S.bestCounterMs = null; S.hold = null;
+        S.seraDeepest = "";      /* セラの最深段階ラッチは試合ごと（再戦含む）にリセット */
+        S.povStage = null;       /* 段階を再評価させる（refreshScore 経由で syncStageImages が走る） */
+        statReset();   /* 成功率ログ：新しい試合の集計を始める */
+        F.lastTurn = -1; F.ringTurn = -1;
+        F.lastResultTurn = st.lastResult ? st.lastResult.turn : -1;
+        hideRing(); endAimUi();
+        readyPop.classList.remove("show"); readyImgWrap.classList.remove("show");
+        judgePop.classList.remove("show");
+        $("endOverlay").classList.add("hidden");
+        logEl.innerHTML = "";
+        log("フレンド対戦開始：" + charName(S.charYou) + "（あなた） vs " + charName(S.charCpu) + "（相手）");
+        refreshScore();
+        showScreen("battle");
+        F.inBattle = true;
+      }
+      function friendApplyBattle(st) {
+        F.inOpening = false;
+        if (F.finishedHandled) {
+          /* 再戦リセット：終了表示を閉じて新規対戦として入り直す */
+          F.finishedHandled = false; F.winRecorded = false; F.inBattle = false;
+          $("endOverlay").classList.add("hidden");
+          stage.classList.remove("ko");
+        }
+        if (!F.inBattle) friendEnterBattle(st);
+        /* HP・ラリーはサーバー状態が正 */
+        S.hpYou = st.hp[F.seat]; S.hpCpu = st.hp[1 - F.seat];
+        S.maxYou = st.maxHp[F.seat]; S.maxCpu = st.maxHp[1 - F.seat];
+        S.rally = st.rally; S.exchanges = st.turn;
+        refreshScore();
+        var delay = 0;
+        if (st.lastResult && st.lastResult.turn !== F.lastResultTurn) {
+          F.lastResultTurn = st.lastResult.turn;
+          friendPresentResult(st.lastResult, st);
+          delay = 1150;   /* 結果演出を見せてから次のターンのREADYへ */
+        }
+        if (st.turn !== F.lastTurn) {
+          F.lastTurn = st.turn;
+          later(function () {
+            if (F.state && F.state.phase === "battle" && F.inBattle) friendBeginTurn(F.state);
+          }, delay);
+        } else if (st.awaiting === "defense" && st.attack && st.attack.by !== F.seat && S.phase === "wait" && F.ringTurn !== st.turn) {
+          friendStartRing(st.attack, st);
+        }
+      }
+      /* ターン開始：CPU戦と同じ READY→3・2・1 を両クライアントでローカル再生 */
+      function friendBeginTurn(st) {
+        var meAtk = st.attacker === F.seat;
+        S.turn = meAtk ? "you" : "cpu";
+        S.phase = "ready";
+        stage.classList.remove("aiming");
+        if (meAtk) setView("offense", "攻撃ビュー", "カウントダウン後に狙える");
+        else setView("defense", "防御ビュー", "カウントダウン後に攻撃が来る");
+        setBanner(meAtk ? "あなたの攻撃" : "相手の攻撃", "カウントダウンが終わるまで待て");
+        readySub.textContent = meAtk
+          ? "あなたの攻撃 ― タッチで狙い、長押しでチャージ"
+          : "相手の攻撃 ― リングが消える前に中心をタップ";
+        readyPop.className = "ready-pop show " + (meAtk ? "atk" : "def");
+        readyImgWrap.classList.add("show");
+        showReadyStep(ASSETS.ready, "READY", false);
+        tone(392, 0.12, "square", 0.06);
+        var step = 0;
+        var countStep = function () {
+          if (S.phase !== "ready" || !F.inBattle) return;
+          if (step < COUNT_SRCS.length) {
+            showReadyStep(COUNT_SRCS[step], String(3 - step), true);
+            tone(523 + step * 110, 0.09, "square", 0.06);
+            step++;
+            later(countStep, ATTACK.countMs);
+          } else {
+            readyPop.classList.remove("show");
+            readyImgWrap.classList.remove("show");
+            friendTurnAction();
+          }
+        };
+        later(countStep, ATTACK.readyMs);
+      }
+      function friendTurnAction() {
+        var st = F.state;
+        if (!st || st.phase !== "battle") return;
+        if (st.attacker === F.seat) {
+          if (st.awaiting === "attack") startAimWindow();
+          else { S.phase = "wait"; setBanner("相手の防御待ち…", "相手がリングに対応している"); }
+        } else {
+          S.phase = "wait";
+          setBanner("相手の攻撃が来る…", "いつ来るかは分からない――出現に反射しろ");
+          if (st.awaiting === "defense" && st.attack && F.ringTurn !== st.turn) friendStartRing(st.attack, st);
+        }
+      }
+      /* 攻撃の送信（座標はステージ内の正規化座標0-1、pはチャージ0-1） */
+      function friendSendAttack(fx, fy, p) {
+        S.phase = "wait";
+        setBanner("あなたの攻撃！", "チャージ " + Math.round(p * 100) + "% ― 相手の防御待ち");
+        friendPost({ op: "attack", code: F.code, x: fx, y: fy, p: p }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          friendHandleData(data);
+        }).catch(function () { friendSetStatus("通信エラー"); });
+      }
+      function friendSendHeal() {
+        S.phase = "wait";
+        setBanner("回復を選んだ", "結果を待っています…");
+        friendPost({ op: "attack", code: F.code, heal: true }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          friendHandleData(data);
+        }).catch(function () { friendSetStatus("通信エラー"); });
+      }
+      function friendFizzle() {
+        endAimUi();
+        stage.classList.remove("aiming");
+        S.phase = "wait";
+        setBanner("時間切れ…", "3秒以内にタッチできず、攻撃は不発");
+        showJudge("不発", "攻撃の機会を逃した", "#ff7a5c");
+        sfx.miss();
+        log("あなたの攻撃は時間切れで不発");
+        /* 不発は攻撃として送らない：fizzle フラグで申告し、サーバー側で防御・ダメージなしにターンを進めてもらう */
+        friendPost({ op: "attack", code: F.code, fizzle: true }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          friendHandleData(data);
+        }).catch(function () { friendSetStatus("通信エラー"); });
+      }
+      /* 防御リング：CPU戦と同式の縮小時間でローカル表示し、判定は見た目に対して確定する */
+      function friendStartRing(atk, st) {
+        F.ringTurn = st.turn;
+        S.rally = st.rally;
+        var aChar = st.fighters[atk.by];
+        var dChar = S.charYou;
+        var durF = 1;
+        if (aChar === "morgana") durF *= 0.85;   /* モルガナ特性：防御リングが0.85倍の速さで縮む */
+        if (dChar === "kanna") durF *= 1.2;      /* かんな特性：自分への攻撃は1.2倍ゆっくり縮む */
+        var r = {
+          attacker: "cpu", defender: "you",
+          aChar: aChar, dChar: dChar,
+          cf: dChar === "lucia" ? 0.5 : COUNTER_F,   /* ルシア特性：残り50%以下は全部カウンター */
+          fx: atk.x, fy: atk.y, p: atk.p,
+          dmg: 0, chip: 0,
+          dur: Math.max(260, Math.round(attackDuration(atk.p) * durF)),
+          R0: ringRadius(atk.p),
+          t0: performance.now(), done: false, raf: 0,
+          cpuTapAt: null, cpuTapXY: null
+        };
+        S.ring = r; S.phase = "ring";
+        stage.classList.add("defending");
+        $("spdNow").textContent = r.dur + "ms";
+        setBanner("相手の攻撃！", dChar === "lucia" ? "ガード不能――残り50%以下に合わせれば全部カウンター" : "リングが消える前に中心をタップ。残り30%以下でカウンター");
+        sfx.launch();
+        function frame(now) {
+          if (r.done) return;
+          var elapsed = now - r.t0;
+          drawRing(r, elapsed);
+          if (elapsed >= r.dur) { friendRingTimeout(r); return; }
+          r.raf = requestAnimationFrame(frame);
+        }
+        r.raf = requestAnimationFrame(frame);
+      }
+      function friendFinishRing(r) {
+        r.done = true;
+        cancelAnimationFrame(r.raf);
+        hideRing();
+        stage.classList.remove("defending");
+      }
+      function friendSendDefend(judgment) {
+        S.phase = "resolve";
+        setBanner("防御判定を送信", "結果を待っています…");
+        friendPost({ op: "defend", code: F.code, judgment: judgment }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          friendHandleData(data);
+        }).catch(function () { friendSetStatus("通信エラー"); });
+      }
+      function friendDefenseTap(clientX, clientY) {
+        var r = S.ring;
+        if (!r || r.done) return;
+        var elapsed = performance.now() - r.t0;
+        var f = Math.max(0, 1 - elapsed / r.dur);
+        var c = ringCenterPx(r), sr = stage.getBoundingClientRect();
+        var dist = Math.hypot(clientX - sr.left - c.x, clientY - sr.top - c.y);
+        var R = r.R0 * f;
+        friendFinishRing(r);
+        tapMark(clientX, clientY, dist <= R ? "#e9a820" : "#ff5a3c");
+        var judgment;
+        if (dist > R) judgment = "fail";                                   /* リングの外＝防御失敗 */
+        else if (r.dChar === "lucia") judgment = f <= r.cf ? "counter" : "fail";
+        else judgment = f <= r.cf ? "counter" : f <= JUST_F ? "just" : "guard";
+        /* 成功率ログ：自分の端末で自分が防御した交換のみ計測（両端末で二重に数えない） */
+        statRecordDefense("friend", r.dChar, r.aChar, r.dur, S.rally, judgment);
+        friendSendDefend(judgment);
+      }
+      function friendRingTimeout(r) {
+        if (r.done) return;
+        friendFinishRing(r);
+        /* 成功率ログ：リング消滅＝不能（none）として計測 */
+        statRecordDefense("friend", r.dChar, r.aChar, r.dur, S.rally, "none");
+        friendSendDefend("none");
+      }
+      /* lastResult の結果演出（CPU戦の judge と同じ見せ方。HPはサーバー状態で別途更新） */
+      function friendPresentResult(lr, st) {
+        var atkIsMe = lr.attacker === F.seat;
+        var atkName = atkIsMe ? "あなた" : "相手";
+        var defName = atkIsMe ? "相手" : "あなた";
+        if (lr.heal) {
+          var amt = typeof lr.heal === "number" ? lr.heal : Math.round(st.maxHp[lr.attacker] * 0.10);
+          sfx.just();
+          showJudge("回復", atkName + "は攻撃をやめて HP +" + amt, "#7de08a");
+          floater(0.5, 0.4, "+" + amt, "#7de08a", 34);
+          log(atkName + "（セラ）は攻撃せず回復、HP+" + amt);
+          return;
+        }
+        var big = "", sub = "", color = "#fff";
+        if (lr.judgment === "counter") {
+          big = "カウンター！"; color = "#ffd257";
+          sub = defName + "の反撃 " + lr.dmgToAtk + "ダメージ";
+          sfx.counter();
+          if (atkIsMe) { stageHurt(); }
+          else showCpuHit();
+          if (lr.dmgToAtk > 0) floater(0.5, 0.32, "-" + lr.dmgToAtk, "#ffd257", 34);
+          log(atkName + "の攻撃を" + defName + "がカウンター、反撃" + lr.dmgToAtk);
+        } else if (lr.judgment === "just") {
+          big = "ジャストガード"; color = "#5fe0d4"; sub = "削りなし";
+          sfx.just();
+          log(atkName + "の攻撃を" + defName + "がジャストガード");
+        } else if (lr.judgment === "guard") {
+          big = "ガード"; color = "#f3ead9"; sub = "削り " + lr.dmgToDef + "ダメージ";
+          sfx.block();
+          log(atkName + "の攻撃を" + defName + "がガード、削り" + lr.dmgToDef);
+        } else { /* none | fail：直撃 */
+          big = lr.judgment === "fail" ? (atkIsMe ? "防御を外した！" : "防御失敗…") : "ガード不能";
+          color = "#ff7a5c";
+          sub = lr.dmgToDef + "ダメージ";
+          sfx.slash();
+          if (atkIsMe) showCpuHit(); else stageHurt();
+          log(atkName + "の攻撃、" + defName + "は被弾" + lr.dmgToDef);
+        }
+        showJudge(big, sub, color);
+        if (lr.dmgToDef > 0 && typeof lr.x === "number") floater(lr.x, lr.y, "-" + lr.dmgToDef, "#ff5a3c", 36);
+      }
+
+      /* ---------- 終了／再戦 ---------- */
+      function friendRenderRematch(st) {
+        var btn = $("againBtn");
+        if (st.rematchAck && st.rematchAck[F.seat]) { btn.textContent = "相手の再戦待ち…"; btn.style.opacity = ".55"; }
+        else { btn.textContent = "再戦"; btn.style.opacity = ""; }
+      }
+      function friendApplyFinished(st) {
+        S.hpYou = st.hp[F.seat]; S.hpCpu = st.hp[1 - F.seat];
+        S.maxYou = st.maxHp[F.seat]; S.maxCpu = st.maxHp[1 - F.seat];
+        S.rally = st.rally; S.exchanges = st.turn;
+        refreshScore();
+        if (st.lastResult && st.lastResult.turn !== F.lastResultTurn) {
+          F.lastResultTurn = st.lastResult.turn;
+          friendPresentResult(st.lastResult, st);
+        }
+        if (F.finishedHandled) { friendRenderRematch(st); return; }
+        F.finishedHandled = true;
+        /* 成功率ログ：この試合の集計を送信する。試合結果は部屋を作った側
+           （ホスト）の端末からのみ送り、両端末で二重に数えない */
+        if (F.host && st.winner !== null && st.winner !== undefined) {
+          statRecordMatch("friend", st.fighters[st.winner], st.fighters[1 - st.winner], st.turn);
+        }
+        statsSend();
+        S.phase = "over";
+        if (S.ring && !S.ring.done) friendFinishRing(S.ring);
+        endAimUi();
+        readyPop.classList.remove("show"); readyImgWrap.classList.remove("show");
+        S.hold = null;
+        stage.classList.remove("aiming", "defending", "show-hit");
+        stage.classList.add("ko");
+        var win = st.winner === F.seat;
+        var draw = st.winner === null || st.winner === undefined;
+        sfx.ko();
+        var note = "";
+        if (win && !F.winRecorded) {
+          F.winRecorded = true;
+          var oppId = st.fighters[1 - F.seat];
+          var before = winsOf(oppId);
+          S.wins[oppId] = before + 1;
+          saveWins();
+          note = before === 0
+            ? "<br><b>ギャラリーに" + charName(oppId) + "の一枚絵が解放された！</b>（" + charName(oppId) + " 1勝）"
+            : "<br>" + charName(oppId) + "への勝利数：<b>" + (before + 1) + "勝</b>";
+        }
+        var title = $("resultTitle");
+        title.textContent = draw ? "引き分け" : win ? "勝利！" : "敗北…";
+        title.className = "result-title " + (win ? "win" : "lose");
+        $("resultStats").innerHTML =
+          "フレンド対戦 ／ 到達ラリー <b>" + st.rally + "</b><br>" +
+          "あなたの残りHP <b>" + Math.max(0, S.hpYou) + "</b> ／ 相手 <b>" + Math.max(0, S.hpCpu) + "</b>" + note;
+        $("reselectBtn").style.display = "none";
+        friendRenderRematch(st);
+        $("endOverlay").classList.remove("hidden");
+        setView(win ? "offense" : "defense", draw ? "引き分け" : "決着", "");
+        log("試合終了：" + (draw ? "引き分け" : win ? "あなたの勝利" : "相手の勝利"));
+      }
+      function friendRematch() {
+        if (!F.code) return;
+        friendPost({ op: "rematch", code: F.code }).then(function (data) {
+          if (data && data.error) { friendSetStatus(data.error); return; }
+          var btn = $("againBtn");
+          btn.textContent = "相手の再戦待ち…"; btn.style.opacity = ".55";
+          friendHandleData(data);
+        }).catch(function () { friendSetStatus("通信エラー"); });
+      }
+
+      /* ---------- フレンド画面の配線 ---------- */
+      function buildFriendCharGrid() {
+        var grid = $("friendCharGrid");
+        CHARACTERS.forEach(function (c) {
+          grid.appendChild(createCharCard(c, function (id) { friendPick(id); }));
+        });
+      }
+      buildFriendCharGrid();
+      $("menuFriendBtn").addEventListener("click", function () { audio(); S.mode = "friend"; showScreen("friend"); });
+      $("friendCreateBtn").addEventListener("click", friendCreate);
+      $("friendInviteUrl").addEventListener("click", function () { this.select(); });
+      $("friendCopyBtn").addEventListener("click", function () {
+        var btn = $("friendCopyBtn");
+        var done = function () {
+          btn.textContent = "コピーしました";
+          setTimeout(function () { btn.textContent = "リンクをコピー"; }, 1600);
+        };
+        var url = $("friendInviteUrl").value;
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, done);
+        else done();
+      });
+      $("friendLeaveBtn").addEventListener("click", function () { audio(); friendLeave(); });
+      $("coinReadyBtn").addEventListener("click", function () { audio(); friendSendReady(); });
+      $("coinLeaveBtn").addEventListener("click", function () { audio(); friendLeave(); });
+      $("friendBackBtn").addEventListener("click", function () { audio(); if (F.code) friendLeave(); else showScreen("menu"); });
+      /* 招待URL（#invite=<8桁>）で開いたら自動でその部屋へ入室を試みる */
+      var inviteMatch = (location.hash || "").match(/invite=(\d{8})/);
+      if (inviteMatch) { S.mode = "friend"; showScreen("friend"); friendJoin(inviteMatch[1]); }
+
+      refreshScore();
+      setBanner("キャラクター選択", "使うキャラを選んで対戦開始");
+    </script>
+  </body>
+</html>
